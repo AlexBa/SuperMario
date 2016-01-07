@@ -16,6 +16,6 @@ include_directories(${PROJECT_SOURCE_DIR}/include)
 link_directories(${PROJECT_SOURCE_DIR}/lib)
 
 # Build the executable and link it with SDL2
-set(SOURCE_FILES src/main.c)
+set(SOURCE_FILES src/main.c src/entity.h src/component.h src/entity.c)
 add_executable(SuperMario ${SOURCE_FILES})
 target_link_libraries(SuperMario SDL2main SDL2)
