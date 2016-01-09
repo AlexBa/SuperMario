@@ -1,21 +1,13 @@
 #include <stdio.h>
 #include <SDL2/SDL.h>
-#include "entity.h"
+#include "entity/entity.h"
+#include "sprite/sprite.h"
+#include "entity/player.h"
+#include "system/system.h"
 
+Entities entities;
+Sprites sprites;
 const Uint8 *key;
-
-unsigned int create_player(Entities *entities, float x, float y)
-{
-    unsigned int entity = entity_create(entities);
-    entities->component_mask[entity] = CMP_POSITION | CMP_COLLISION;
-
-    entities->positions[entity].x = x;
-    entities->positions[entity].y = y;
-    entities->collisions[entity].x = x;
-    entities->collisions[entity].y = y;
-
-    return entity;
-}
 
 int main(int argc, char** argv) {
     SDL_Window *window;
@@ -39,6 +31,8 @@ int main(int argc, char** argv) {
     SDL_RenderSetLogicalSize(renderer, 800, 600);
     SDL_SetRenderDrawColor(renderer, 128, 128, 128, 255);
 
+    unsigned int player_id = player_create(&entities, 100.0f, 16.0f);
+
     int done = 0;
     while(!done){
         key = SDL_GetKeyboardState(NULL);
@@ -60,15 +54,14 @@ int main(int argc, char** argv) {
             }
         }
 
+        sys_input_update(&entities, key);
+
         SDL_RenderClear(renderer);
+        sys_render_update(&entities, &sprites, renderer);
+        //sys_render_print_info(&entities);
         SDL_RenderPresent(renderer);
     }
 
-    // Example code
-    Entities entities;
-    unsigned int player_id = create_player(&entities, 10, 10);
-    printf("PosX: %f\n", entities.positions[player_id].x);
-    printf("PosY: %f\n", entities.positions[player_id].y);
     entity_destroy(&entities, player_id);
 
     SDL_DestroyWindow(window);

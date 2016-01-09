@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "component.h"
+#include "../component/component.h"
 
 #ifndef SUPERMARIO_ENTITY_H
 #define SUPERMARIO_ENTITY_H
@@ -9,8 +9,9 @@
 struct entities_t
 {
     int component_mask[ENTITY_COUNT];
-    cmp_position positions[ENTITY_COUNT];
-    cmp_collision collisions[ENTITY_COUNT];
+    Render renders[ENTITY_COUNT];
+    Position positions[ENTITY_COUNT];
+    Collision collisions[ENTITY_COUNT];
 };
 
 typedef struct entities_t Entities;

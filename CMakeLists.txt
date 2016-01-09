@@ -15,7 +15,9 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Werror")
 include_directories(${PROJECT_SOURCE_DIR}/include)
 link_directories(${PROJECT_SOURCE_DIR}/lib)
 
+configure_file(img/player.bmp ${CMAKE_SOURCE_DIR}/bin COPYONLY)
+
 # Build the executable and link it with SDL2
-set(SOURCE_FILES src/main.c src/entity.h src/component.h src/entity.c)
+set(SOURCE_FILES src/main.c src/entity/entity.h src/entity/entity.c src/entity/player.h src/entity/player.c src/component/component.h src/sprite/sprite.h src/sprite/sprite.c src/system/system.h src/system/system.c)
 add_executable(SuperMario ${SOURCE_FILES})
 target_link_libraries(SuperMario SDL2main SDL2)
