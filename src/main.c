@@ -9,6 +9,9 @@ Entities entities;
 Sprites sprites;
 const Uint8 *key;
 
+#define WINDOW_HEIGHT 600
+#define WINDOW_WIDTH 800
+
 int main(int argc, char** argv) {
     SDL_Window *window;
     SDL_Renderer *renderer;
@@ -28,6 +31,7 @@ int main(int argc, char** argv) {
         printf("Error: Could not create renderer. %s", SDL_GetError());
     }
 
+    SDL_SetWindowSize(window, WINDOW_WIDTH, WINDOW_HEIGHT);
     SDL_RenderSetLogicalSize(renderer, 800, 600);
     SDL_SetRenderDrawColor(renderer, 128, 128, 128, 255);
 

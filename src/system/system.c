@@ -43,13 +43,13 @@ void sys_input_update(Entities *entities, const Uint8 *key)
 		if((entities->component_mask[entity] & CMP_INPUT_PLAYER) == CMP_INPUT_PLAYER)
 		{
 			if(key[SDL_SCANCODE_UP])
-				entities->positions[entity].y-=2.0f;
+				entities->positions[entity].y-=0.5f;
 			if(key[SDL_SCANCODE_DOWN])
-				entities->positions[entity].y+=2.0f;
+				entities->positions[entity].y+=0.5f;
 			if(key[SDL_SCANCODE_LEFT])
-				entities->positions[entity].x-=2.0f;
+				entities->positions[entity].x-=0.5f;
 			if(key[SDL_SCANCODE_RIGHT])
-				entities->positions[entity].x+=2.0f;
+				entities->positions[entity].x+=0.5f;
 		}
 	}
 }
