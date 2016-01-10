@@ -1,3 +1,4 @@
+#include <SDL2/SDL.h>
 #include "sprite.h"
 
 #ifndef SUPERMARIO_TILE_H
@@ -28,5 +29,6 @@ Tiles tiles;
 int tile_create(SDL_Renderer *renderer, const char* name, int type, int x, int y);
 int tile_delete(int tile);
 int tile_get_by_position(int x, int y);
+void tile_render(SDL_Renderer *renderer, int tile);
 
 #endif //SUPERMARIO_TILE_H

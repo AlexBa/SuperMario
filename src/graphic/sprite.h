@@ -23,6 +23,6 @@ Sprites sprites;
 int sprite_create(SDL_Renderer *renderer, const char* name);
 int sprite_delete(int sprite);
 int sprite_get(const char* name);
-void sprite_render(SDL_Renderer *renderer, const char *name, int x, int y);
+void sprite_render(SDL_Renderer *renderer, int sprite, int x, int y);
 
 #endif

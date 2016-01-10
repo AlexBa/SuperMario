@@ -7,7 +7,7 @@
  * @param type The type of the tile
  * @param x The horizontal position of the tile
  * @param y The vertical position of the tile
- * @return Either the ID of the tile or an error code
+ * @return Either the tile ID or an error code
  */
 int tile_create(SDL_Renderer *renderer, const char* name, int type, int x, int y) {
     for(int tile = 0; tile < TILE_COUNT; ++tile) {
@@ -15,7 +15,7 @@ int tile_create(SDL_Renderer *renderer, const char* name, int type, int x, int y
             tiles.names[tile] = name;
             tiles.types[tile] = type;
             tiles.sprites[tile] = sprite_get(name);
-            if(tiles.sprites[tile] == ERROR_SPRITE_NOT_FOUND) {
+            if(tiles.sprites[tile] == SPRITE_ERROR_NOT_FOUND) {
                 tiles.sprites[tile] = sprite_create(renderer, name);
             }
 
@@ -74,4 +74,17 @@ int tile_get_by_position(int x, int y) {
 
     printf("ERROR: Failed to find the tile x:%d y:%d.\n", x, y);
     return TILE_ERROR_NOT_FOUND;
+}
+
+/**
+ * Render the tile to the screen
+ * @param renderer The renderer we want to draw to
+ * @param tile The tile ID
+ */
+void tile_render(SDL_Renderer *renderer, int tile) {
+    int sprite = tiles.sprites[tile],
+        x = tiles.x[tile],
+        y = tiles.y[tile];
+
+    sprite_render(renderer, sprite, x, y);
 }

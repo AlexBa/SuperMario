@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "../component/component.h"
+#include "../graphic/sprite.h"
 
 #ifndef SUPERMARIO_ENTITY_H
 #define SUPERMARIO_ENTITY_H

@@ -8,7 +8,7 @@ unsigned int player_create(Entities *entities, float x, float y)
     entities->positions[entity].y = y;
     entities->collisions[entity].x = x;
     entities->collisions[entity].y = y;
-    entities->renders[entity].name = "player";
+    entities->renders[entity].name = "player.bmp";
 
     return entity;
 }
