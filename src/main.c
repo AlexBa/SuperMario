@@ -4,6 +4,7 @@
 #include "sprite/sprite.h"
 #include "entity/player.h"
 #include "system/system.h"
+#include "sprite/texture.h"
 
 Entities entities;
 Sprites sprites;
@@ -30,6 +31,7 @@ int main(int argc, char** argv) {
 
     SDL_RenderSetLogicalSize(renderer, 800, 600);
     SDL_SetRenderDrawColor(renderer, 128, 128, 128, 255);
+    SDL_ShowCursor(SDL_DISABLE);
 
     unsigned int player_id = player_create(&entities, 100.0f, 16.0f);
 

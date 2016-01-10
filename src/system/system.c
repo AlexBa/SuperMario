@@ -13,8 +13,8 @@ void sys_render_update(Entities *entities, Sprites *sprites, SDL_Renderer *rende
 	{
 		if((entities->component_mask[entity] & CMP_RENDER) == CMP_RENDER)
 		{
-			//TODO: use get_sprite here with the sprite database and draw it with SDL_RenderCopy()
-			int sprite = get_sprite(sprites, renderer, entities->renders[entity].name);
+			//TODO: use get_sprite here with the graphic database and draw it with SDL_RenderCopy()
+			int sprite = sprite_get(sprites, renderer, entities->renders[entity].name);
 
 			//fill out position rect if it contains a position component, otherwise use defaults.
 			int w, h;
