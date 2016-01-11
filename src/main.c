@@ -7,11 +7,7 @@
 #include "game/level.h"
 
 Entities entities;
-
 const Uint8 *key;
-
-#define WINDOW_HEIGHT 600
-#define WINDOW_WIDTH 800
 
 int main(int argc, char** argv) {
     SDL_Window *window;
@@ -20,20 +16,18 @@ int main(int argc, char** argv) {
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
         printf("%s", SDL_GetError());
         return 1;
-    } else {
-        printf("SDL is working correctly.\n\n");
     }
 
-    SDL_CreateWindowAndRenderer(0, 0, SDL_WINDOW_RESIZABLE, &window, &renderer);
+    SDL_CreateWindowAndRenderer(0, 0, SDL_WINDOW_FULLSCREEN_DESKTOP, &window, &renderer);
     if(window==NULL) {
         printf("Error: Could not create window. %s", SDL_GetError());
+        return 1;
     }
     if(renderer==NULL) {
         printf("Error: Could not create renderer. %s", SDL_GetError());
+        return 1;
     }
 
-    SDL_SetWindowSize(window, WINDOW_WIDTH, WINDOW_HEIGHT);
-    SDL_RenderSetLogicalSize(renderer, 800, 600);
     SDL_SetRenderDrawColor(renderer, 128, 128, 128, 255);
     SDL_ShowCursor(SDL_DISABLE);
 
@@ -72,14 +66,9 @@ int main(int argc, char** argv) {
         last_ticks = current_ticks;
 
         sys_input_update(&entities, key, delta);
-
         SDL_RenderClear(renderer);
-
-
-
         level_render(renderer, level);
         sys_render_update(&entities, renderer);
-        //sys_render_print_info(&entities);
         SDL_RenderPresent(renderer);
     }
 
