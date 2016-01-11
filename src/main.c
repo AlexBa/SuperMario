@@ -1,11 +1,10 @@
 #include <stdio.h>
 #include <SDL2/SDL.h>
 #include "entity/entity.h"
-#include "graphic/sprite.h"
 #include "entity/player.h"
 #include "system/system.h"
-#include "graphic/texture.h"
 #include "graphic/tile.h"
+#include "game/level.h"
 
 Entities entities;
 
@@ -38,8 +37,11 @@ int main(int argc, char** argv) {
     SDL_SetRenderDrawColor(renderer, 128, 128, 128, 255);
     SDL_ShowCursor(SDL_DISABLE);
 
-
-    int tile = tile_create(renderer, "player.bmp", TILE_BLOCK, 30, 30);
+    Level *level = level_create(renderer, "player.bmp");
+    Tile *tile1 = tile_create(renderer, "player.bmp", TILE_BLOCK, 50, 30);
+    Tile *tile2 = tile_create(renderer, "player.bmp", TILE_BLOCK, 100, 60);
+    level_add_tile(level, tile1);
+    level_add_tile(level, tile2);
 
     unsigned int player_id = player_create(&entities, 100.0f, 16.0f);
 
@@ -67,12 +69,15 @@ int main(int argc, char** argv) {
         sys_input_update(&entities, key);
 
         SDL_RenderClear(renderer);
-        tile_render(renderer, tile);
+
+
+        level_render(renderer, level);
         sys_render_update(&entities, renderer);
         //sys_render_print_info(&entities);
         SDL_RenderPresent(renderer);
     }
 
+    level_delete(level);
     entity_destroy(&entities, player_id);
 
     SDL_DestroyWindow(window);

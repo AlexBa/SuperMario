@@ -4,19 +4,20 @@
  * Create a new sprite
  * @param renderer The renderer for the texture in the sprite
  * @param name The path the BMP file
- * @return Either the sprite ID or an error code
+ * @return Either the sprite or NULL
  */
-int sprite_create(SDL_Renderer *renderer, const char *name) {
+Sprite* sprite_create(SDL_Renderer *renderer, const char *name) {
     for(int sprite = 0; sprite < SPRITE_COUNT; ++sprite) {
-        if(sprites.textures[sprite] == NULL) {
-            sprites.textures[sprite] = texture_create(renderer, name);
-            sprites.names[sprite] = name;
-            return sprite;
+        if(spriteCache[sprite].cashId == SPRITE_EMPTY) {
+            spriteCache[sprite].cashId = sprite;
+            spriteCache[sprite].texture = texture_create(renderer, name);
+            spriteCache[sprite].name = name;
+            return &spriteCache[sprite];
         }
     }
 
     printf("ERROR: No more space for sprite '%s' available.\n", name);
-    return SPRITE_ERROR_NO_SPACE_AVAILABLE;
+    exit(1);
 }
 
 /**
@@ -24,21 +25,20 @@ int sprite_create(SDL_Renderer *renderer, const char *name) {
  * @param sprite The sprite ID
  * @return Either a success or error code
  */
-int sprite_delete(int sprite) {
-    if (sprite > SPRITE_COUNT) {
-        printf("ERROR: Out of range for the sprite #%d.\n", sprite);
-        return SPRITE_ERROR_OUT_OF_RANGE;
+void sprite_delete(Sprite *sprite) {
+    if (sprite->cashId > SPRITE_COUNT || sprite < 0) {
+        printf("ERROR: Out of range for the sprite #%d.\n", sprite->cashId);
+        exit(1);
     }
 
-    if(sprites.names[sprite] == NULL) {
-        printf("ERROR: Failed to find the sprite #%d.\n", sprite);
-        return SPRITE_ERROR_NOT_FOUND;
+    if(sprite->cashId == SPRITE_EMPTY) {
+        printf("ERROR: Failed to find the sprite #%d.\n", sprite->cashId);
+        exit(1);
     }
 
-    sprites.names[sprite] = NULL;
-    sprites.textures[sprite] = NULL;
-
-    return SPRITE_SUCCESS;
+    sprite->cashId = SPRITE_EMPTY;
+    sprite->name = NULL;
+    sprite->texture = NULL;
 }
 
 /**
@@ -46,26 +46,24 @@ int sprite_delete(int sprite) {
  * @param name The path of the sprite
  * @return Either the sprite ID or an related error code
  */
-int sprite_get(const char *name) {
+Sprite* sprite_get(const char *name) {
     for(int sprite = 0; sprite < SPRITE_COUNT; ++sprite) {
-        if(sprites.names[sprite] == name) {
-            return sprite;
+
+        if(strcmp(spriteCache[sprite].name, name) == 0) {
+            return &spriteCache[sprite];
         }
     }
 
     printf("ERROR: Failed to find the sprite '%s'.\n", name);
-    return SPRITE_ERROR_NOT_FOUND;
+    return NULL;
 }
 
 /**
  * @param renderer The renderer we want to draw to
- * @param sprite The sprite ID
+ * @param sprite The sprite to render
  * @param x The horizontal position of the sprite
  * @param y the vertical position of the sprite
  */
-void sprite_render(SDL_Renderer *renderer, int sprite, int x, int y) {
-    SDL_Texture *texture = NULL;
-
-    texture = sprites.textures[sprite];
-    texture_render(renderer, texture, x, y);
+void sprite_render(SDL_Renderer *renderer, Sprite *sprite, int x, int y) {
+    texture_render(renderer, sprite->texture, x, y);
 }

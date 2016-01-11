@@ -22,6 +22,14 @@ SDL_Texture* texture_create(SDL_Renderer *renderer, const char* path) {
 }
 
 /**
+ * Delete an existing texture
+ * @param texture The texture to delete
+ */
+void texture_delete(SDL_Texture *texture) {
+    SDL_DestroyTexture(texture);
+}
+
+/**
  * Render the texture at the position x and y
  * @param renderer The renderer we want to draw to
  * @param texture The texture we want to draw

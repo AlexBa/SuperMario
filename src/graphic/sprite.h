@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <SDL2/SDL.h>
 #include "../component/component.h"
@@ -9,20 +10,18 @@
 #define SUPERMARIO_SPRITE_H
 
 #define SPRITE_COUNT 50
-#define SPRITE_SUCCESS 0
-#define SPRITE_ERROR_NOT_FOUND -1
-#define SPRITE_ERROR_NO_SPACE_AVAILABLE -2
-#define SPRITE_ERROR_OUT_OF_RANGE -3
+#define SPRITE_EMPTY 0
 
-typedef struct sprites_t {
-    const char *names[SPRITE_COUNT];
-    SDL_Texture *textures[SPRITE_COUNT];
-} Sprites;
+typedef struct sprite_t {
+    int cashId;
+    const char *name;
+    SDL_Texture *texture;
+} Sprite;
 
-Sprites sprites;
-int sprite_create(SDL_Renderer *renderer, const char* name);
-int sprite_delete(int sprite);
-int sprite_get(const char* name);
-void sprite_render(SDL_Renderer *renderer, int sprite, int x, int y);
+Sprite spriteCache[SPRITE_COUNT];
+Sprite* sprite_create(SDL_Renderer *renderer, const char* name);
+void sprite_delete(Sprite *sprite);
+Sprite* sprite_get(const char* name);
+void sprite_render(SDL_Renderer *renderer, Sprite *sprite, int x, int y);
 
 #endif

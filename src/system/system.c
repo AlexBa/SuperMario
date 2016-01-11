@@ -15,7 +15,7 @@ void sys_render_update(Entities *entities, SDL_Renderer *renderer)
 		{
 			//TODO: use get_sprite here with the graphic database and draw it with SDL_RenderCopy()
 
-			int sprite = sprite_get(entities->renders[entity].name);
+			Sprite *sprite = sprite_get(entities->renders[entity].name);
 
 			//fill out position rect if it contains a position component, otherwise use defaults.
 			int w, h;
@@ -27,10 +27,10 @@ void sys_render_update(Entities *entities, SDL_Renderer *renderer)
 				pos_rect.x = entities->positions[entity].x;
 				pos_rect.y = entities->positions[entity].y;
 			}
-			SDL_QueryTexture(sprites.textures[sprite], NULL, NULL, &w, &h);
+			SDL_QueryTexture(sprite->texture, NULL, NULL, &w, &h);
 			pos_rect.w = w;
 			pos_rect.h = h;
-			SDL_RenderCopy(renderer, sprites.textures[sprite], NULL, &pos_rect);
+			SDL_RenderCopy(renderer, sprite->texture, NULL, &pos_rect);
 		}
 	}
 
