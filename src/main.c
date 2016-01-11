@@ -45,6 +45,7 @@ int main(int argc, char** argv) {
 
     unsigned int player_id = player_create(&entities, 100.0f, 16.0f);
 
+    unsigned int last_ticks = SDL_GetTicks();
     int done = 0;
     while(!done){
         key = SDL_GetKeyboardState(NULL);
@@ -66,9 +67,14 @@ int main(int argc, char** argv) {
             }
         }
 
-        sys_input_update(&entities, key);
+        unsigned int current_ticks = SDL_GetTicks();
+        float delta = (current_ticks - last_ticks) / 1000.0f;
+        last_ticks = current_ticks;
+
+        sys_input_update(&entities, key, delta);
 
         SDL_RenderClear(renderer);
+
 
 
         level_render(renderer, level);

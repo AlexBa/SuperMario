@@ -18,8 +18,7 @@ typedef struct cmp_velocity_t {
     float y;
 } Velocity;
 
-typedef struct cmp_collision_t
-{
+typedef struct cmp_collision_t {
     SDL_Rect *bounds;
 } Collision;
 

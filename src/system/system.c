@@ -33,25 +33,24 @@ void sys_render_update(Entities *entities, SDL_Renderer *renderer)
 			SDL_RenderCopy(renderer, sprite->texture, NULL, &pos_rect);
 		}
 	}
-
 }
 
-void sys_input_update(Entities *entities, const Uint8 *key) {
+void sys_input_update(Entities *entities, const Uint8 *key, float delta) {
 	for(int entity = 0; entity < ENTITY_COUNT; ++entity) {
 		if((entities->component_mask[entity] & CMP_POSITION) == CMP_POSITION &&
 		   (entities->component_mask[entity] & CMP_VELOCITY) == CMP_VELOCITY &&
 		   (entities->component_mask[entity] & CMP_INPUT_PLAYER) == CMP_INPUT_PLAYER ) {
 			if(key[SDL_SCANCODE_UP]) {
-				entities->positions[entity].y -= entities->velocities[entity].y;
+				entities->positions[entity].y -= entities->velocities[entity].y * delta;
 			}
 			if(key[SDL_SCANCODE_DOWN]) {
-				entities->positions[entity].y += entities->velocities[entity].y;
+				entities->positions[entity].y += entities->velocities[entity].y * delta;
 			}
 			if(key[SDL_SCANCODE_LEFT]) {
-				entities->positions[entity].x -= entities->velocities[entity].x;
+				entities->positions[entity].x -= entities->velocities[entity].x * delta;
 			}
 			if(key[SDL_SCANCODE_RIGHT]) {
-				entities->positions[entity].x += entities->velocities[entity].x;
+				entities->positions[entity].x += entities->velocities[entity].x * delta;
 			}
 		}
 	}
