@@ -4,27 +4,21 @@
 #ifndef SUPERMARIO_COMPONENT_H
 #define SUPERMARIO_COMPONENT_H
 
-typedef struct
-{
+typedef struct cmp_render_t {
     const char* name;
-} cmp_render_t;
-typedef cmp_render_t Render;
+} Render;
 
-typedef struct
-{
+typedef struct cmp_position_t {
     float x;
     float y;
-} cmp_position_t;
-typedef cmp_position_t Position;
+} Position;
 
-typedef struct
+typedef struct cmp_collision_t
 {
     SDL_Rect *bounds;
-} cmp_collision_t;
-typedef cmp_collision_t Collision;
+} Collision;
 
-enum component
-{
+enum component {
     CMP_NONE = 0,
     CMP_RENDER = 1 << 0,
     CMP_POSITION = 1 << 1,
