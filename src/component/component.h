@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <SDL2/SDL_rect.h>
 
 #ifndef SUPERMARIO_COMPONENT_H
 #define SUPERMARIO_COMPONENT_H
@@ -18,10 +19,7 @@ typedef cmp_position_t Position;
 
 typedef struct
 {
-    float x;
-    float y;
-    float width;
-    float height;
+    SDL_Rect *bounds;
 } cmp_collision_t;
 typedef cmp_collision_t Collision;
 
