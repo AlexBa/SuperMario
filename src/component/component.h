@@ -13,6 +13,11 @@ typedef struct cmp_position_t {
     float y;
 } Position;
 
+typedef struct cmp_velocity_t {
+    float x;
+    float y;
+} Velocity;
+
 typedef struct cmp_collision_t
 {
     SDL_Rect *bounds;
@@ -22,8 +27,9 @@ enum component {
     CMP_NONE = 0,
     CMP_RENDER = 1 << 0,
     CMP_POSITION = 1 << 1,
-    CMP_COLLISION = 1 << 2,
-    CMP_INPUT_PLAYER = 1 << 3
+    CMP_VELOCITY = 1 << 2,
+    CMP_COLLISION = 1 << 3,
+    CMP_INPUT_PLAYER = 1 << 4
 };
 
 #endif //SUPERMARIO_COMPONENT_H

@@ -12,6 +12,7 @@ struct entities_t
     int component_mask[ENTITY_COUNT];
     Render renders[ENTITY_COUNT];
     Position positions[ENTITY_COUNT];
+    Velocity velocities[ENTITY_COUNT];
     Collision collisions[ENTITY_COUNT];
 };
 
