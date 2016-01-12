@@ -18,7 +18,7 @@ int main(int argc, char** argv) {
         return 1;
     }
 
-    SDL_CreateWindowAndRenderer(0, 0, SDL_WINDOW_FULLSCREEN_DESKTOP, &window, &renderer);
+    SDL_CreateWindowAndRenderer(0, 0, SDL_WINDOW_RESIZABLE, &window, &renderer);
     if(window==NULL) {
         printf("Error: Could not create window. %s", SDL_GetError());
         return 1;
@@ -65,7 +65,7 @@ int main(int argc, char** argv) {
         float delta = (current_ticks - last_ticks) / 1000.0f;
         last_ticks = current_ticks;
 
-        sys_input_update(&entities, key, delta);
+        sys_input_update(level, &entities, key, delta);
         SDL_RenderClear(renderer);
         level_render(renderer, level);
         sys_render_update(&entities, renderer);

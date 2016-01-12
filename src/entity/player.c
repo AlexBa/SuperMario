@@ -10,6 +10,8 @@ unsigned int player_create(Entities *entities, float x, float y) {
     entities->collisions[entity].bounds = malloc(sizeof(SDL_Rect));
     entities->collisions[entity].bounds->x = (int) x;
     entities->collisions[entity].bounds->y = (int) y;
+    entities->collisions[entity].bounds->w = 32;
+    entities->collisions[entity].bounds->h = 32;
     entities->renders[entity].name = "player.bmp";
 
     return entity;
