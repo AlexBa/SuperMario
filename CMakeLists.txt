@@ -16,6 +16,7 @@ include_directories(${PROJECT_SOURCE_DIR}/include)
 link_directories(${PROJECT_SOURCE_DIR}/lib)
 
 configure_file(img/player.bmp ${CMAKE_SOURCE_DIR}/bin COPYONLY)
+configure_file(img/back.bmp ${CMAKE_SOURCE_DIR}/bin COPYONLY)
 
 # Build the executable and link it with SDL2
 set(SOURCE_FILES src/main.c src/system/collision.h src/system/collision.c src/entity/entity.h src/entity/entity.c src/entity/player.h src/entity/player.c src/component/component.h src/graphic/sprite.h src/graphic/sprite.c src/graphic/tile.h src/graphic/tile.c src/system/system.h src/system/system.c src/graphic/texture.c src/graphic/texture.h src/game/level.c src/game/level.c src/game/level.h src/game/game.c src/game/game.h)

@@ -13,7 +13,7 @@ typedef struct level_t {
     const char *name;
     Sprite *background;
     int tileFree[LEVEL_TILE_COUNT];
-    Tile *tiles[LEVEL_TILE_COUNT];
+    Tile *tiles[LEVEL_TILE_COUNT];;
 } Level;
 
 Level* level_create(SDL_Renderer *renderer, const char *name);

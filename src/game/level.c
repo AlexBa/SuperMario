@@ -1,4 +1,6 @@
 #include "level.h"
+#define Y 10
+#define X 20
 
 Level* level_create(SDL_Renderer *renderer, const char *name) {
     Level *level = malloc(sizeof(Level));
@@ -7,6 +9,33 @@ Level* level_create(SDL_Renderer *renderer, const char *name) {
 
     for (int i = 0; i < LEVEL_TILE_COUNT; i++) {
         level->tileFree[i] = 1;
+    }
+
+    char field [Y][X] = {"____________________",
+                         "|                  |",
+                         "|                  |",
+                         "|        cc        |",
+                         "|        cc        |",
+                         "|      cccccc      |",
+                         "|     c  cc  c     |",
+                         "|       c  c       |",
+                         "|      c    c      |",
+                         "____________________",
+                        };
+
+    for (int i = 0; i < Y; i++) {
+        for (int j = 0; j < X; j++) {
+            if (field[i][j] == '_') {
+                Tile *tile = tile_create(renderer, "player.bmp", TILE_BLOCK, (j * TILE_WIDTH), (i * TILE_HEIGHT));
+                level_add_tile(level, tile);
+            } else if (field [i][j] == '|') {
+                Tile *tile = tile_create(renderer, "player.bmp", TILE_BLOCK, (j * TILE_WIDTH), (i * TILE_HEIGHT));
+                level_add_tile(level, tile);
+            } else if (field [i][j] == 'c') {
+                Tile *tile = tile_create(renderer, "player.bmp", TILE_BLOCK, (j * TILE_WIDTH), (i * TILE_HEIGHT));
+                level_add_tile(level, tile);
+            }
+        }
     }
 
     return level;

@@ -37,12 +37,8 @@ void game_delete(Game *game) {
 void game_run(Game *game) {
     //TODO: Example code. Remove it later
     game->level = level_create(game->renderer, "player.bmp");
-    Tile *tile1 = tile_create(game->renderer, "player.bmp", TILE_BLOCK, 50, 30);
-    Tile *tile2 = tile_create(game->renderer, "player.bmp", TILE_BLOCK, 100, 60);
-    level_add_tile(game->level, tile1);
-    level_add_tile(game->level, tile2);
 
-    unsigned int player_id = player_create(&entities, 100.0f, 16.0f);
+    unsigned int player_id = player_create(&entities, 64.0f, 64.0f);
     game->last_ticks = SDL_GetTicks();
 
     game_continue(game);
