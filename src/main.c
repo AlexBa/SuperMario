@@ -12,8 +12,13 @@ int main(int argc, char** argv) {
         return 1;
     }
 
-    // Run the game
+    // Create the game
     game = game_create();
+    if (game == NULL) {
+        printf("ERROR: Failed to create the game.");
+    }
+
+    // Run the game
     game_run(game);
     game_delete(game);
 
