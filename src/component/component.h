@@ -23,8 +23,11 @@ typedef struct cmp_collision_t {
 } Collision;
 
 typedef struct cmp_gravitation_t {
-
 } Gravitation;
+
+typedef struct cmp_straight_movement_t {
+    char *direction;
+} Straight_Movement;
 
 enum component {
     CMP_NONE = 0,
@@ -33,7 +36,8 @@ enum component {
     CMP_VELOCITY = 1 << 2,
     CMP_COLLISION = 1 << 3,
     CMP_INPUT_PLAYER = 1 << 4,
-    CMP_GRAVITATION = 1 << 5
+    CMP_GRAVITATION = 1 << 5,
+    CMP_STRAIGHT_MOVEMENT = 1 << 6
 };
 
 #endif //SUPERMARIO_COMPONENT_H

@@ -39,6 +39,7 @@ void game_run(Game *game) {
     game->level = level_create(game->renderer, "player.bmp");
 
     unsigned int player_id = player_create(&entities, 64.0f, 64.0f);
+    unsigned int enemy_id = enemy_create(&entities, 560.0f, 64.0f);
     game->last_ticks = SDL_GetTicks();
 
     game_continue(game);
@@ -77,6 +78,7 @@ void game_run(Game *game) {
 
     level_delete(game->level);
     entity_destroy(&entities, player_id);
+    entity_destroy(&entities, enemy_id);
 }
 
 /**
@@ -100,6 +102,7 @@ void game_pause(Game *game) {
  */
 void game_update(Game *game, float delta) {
     sys_input_update(game->level, &entities, game->key, delta);
+    sys_straight_movement_update(game->level, &entities, delta);
     sys_gravitation_update(game->level, &entities, delta);
 }
 

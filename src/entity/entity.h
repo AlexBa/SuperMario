@@ -15,6 +15,7 @@ struct entities_t
     Velocity velocities[ENTITY_COUNT];
     Collision collisions[ENTITY_COUNT];
     Gravitation gravitations[ENTITY_COUNT];
+    Straight_Movement straightMovements[ENTITY_COUNT];
 };
 
 typedef struct entities_t Entities;
