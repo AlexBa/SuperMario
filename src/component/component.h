@@ -22,13 +22,18 @@ typedef struct cmp_collision_t {
     SDL_Rect *bounds;
 } Collision;
 
+typedef struct cmp_gravitation_t {
+
+} Gravitation;
+
 enum component {
     CMP_NONE = 0,
     CMP_RENDER = 1 << 0,
     CMP_POSITION = 1 << 1,
     CMP_VELOCITY = 1 << 2,
     CMP_COLLISION = 1 << 3,
-    CMP_INPUT_PLAYER = 1 << 4
+    CMP_INPUT_PLAYER = 1 << 4,
+    CMP_GRAVITATION = 1 << 5
 };
 
 #endif //SUPERMARIO_COMPONENT_H

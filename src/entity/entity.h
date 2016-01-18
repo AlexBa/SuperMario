@@ -14,6 +14,7 @@ struct entities_t
     Position positions[ENTITY_COUNT];
     Velocity velocities[ENTITY_COUNT];
     Collision collisions[ENTITY_COUNT];
+    Gravitation gravitations[ENTITY_COUNT];
 };
 
 typedef struct entities_t Entities;

@@ -1,5 +1,7 @@
 #include "system.h"
 
+#define SYSTEM_GRAVITY_FACTOR 25
+
 void sys_render_update(Entities *entities, SDL_Renderer *renderer)
 {
 	//UI/HUD elements defined as render components without position
@@ -98,6 +100,43 @@ void sys_input_update(Level *level, Entities *entities, const Uint8 *key, float 
 					entities->collisions[entity].bounds->x = (int) entities->positions[entity].x;
 				}
             }
+		}
+	}
+}
+
+
+void sys_gravitation_update(Level *level, Entities *entities, float delta) {
+	for(unsigned int entity = 0; entity < ENTITY_COUNT; ++entity)
+	{
+		if((entities->component_mask[entity] & CMP_POSITION) == CMP_POSITION &&
+		   (entities->component_mask[entity] & CMP_VELOCITY) == CMP_VELOCITY &&
+		   (entities->component_mask[entity] & CMP_COLLISION) == CMP_COLLISION &&
+		   (entities->component_mask[entity] & CMP_GRAVITATION) == CMP_GRAVITATION ) {
+			entities->positions[entity].y += 0.5 * SYSTEM_GRAVITY_FACTOR * 9.81 * delta;
+
+			bool willCollide = false;
+			for(int i = 0; i < LEVEL_TILE_COUNT; i++) {
+				if (level->tileFree[i] == 0) {
+					Position *p = &entities->positions[entity];
+					Collision *c = &entities->collisions[entity];
+					Tile *t = level->tiles[i];
+
+					SDL_Rect futureBounds;
+					futureBounds.x = (int)p->x;
+					futureBounds.y = (int)p->y;
+					futureBounds.w = c->bounds->w;
+					futureBounds.h = c->bounds->h;
+
+					willCollide = collision_check(&futureBounds, t->bounds);
+					if (willCollide) {
+						break;
+					}
+				}
+			}
+
+			if (willCollide) {
+				entities->positions[entity].y -= 0.5 * SYSTEM_GRAVITY_FACTOR * 9.81 * delta;
+			}
 		}
 	}
 }

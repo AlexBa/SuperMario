@@ -100,6 +100,7 @@ void game_pause(Game *game) {
  */
 void game_update(Game *game, float delta) {
     sys_input_update(game->level, &entities, game->key, delta);
+    sys_gravitation_update(game->level, &entities, delta);
 }
 
 /**
