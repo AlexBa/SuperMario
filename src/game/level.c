@@ -22,16 +22,16 @@ Level* level_create(SDL_Renderer *renderer, const char *name) {
         level->entities[i] = NULL;
     }
 
-    char field [LEVEL_HEIGHT][LEVEL_WIDTH] = {"____________________",
-                                              "|                  |",
-                                              "|                  |",
-                                              "|        cc        |",
-                                              "|        cc        |",
-                                              "|      cccccc      |",
-                                              "|     c  cc  c     |",
-                                              "|       c  c       |",
-                                              "|      c    c      |",
-                                              "_____ ______________",};
+    char field [LEVEL_HEIGHT][LEVEL_WIDTH] = {"_________________________",
+                                              "|                       |",
+                                              "|                       |",
+                                              "|         c             |",
+                                              "|        cc c           |",
+                                              "|      c cc c       c   |",
+                                              "|     c  cc  c    c     |",
+                                              "|       cc c  c   c     |",
+                                              "|      c        c       |",
+                                              "______________________ __",};
 
     for (int i = 0; i < LEVEL_HEIGHT; i++) {
         for (int j = 0; j < LEVEL_WIDTH; j++) {

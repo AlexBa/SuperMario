@@ -11,7 +11,7 @@
 // Constants
 #define LEVEL_TILE_COUNT 10000
 #define LEVEL_ENTITY_COUNT 1000
-#define LEVEL_WIDTH 20
+#define LEVEL_WIDTH 50
 #define LEVEL_HEIGHT 10
 
 // Object
