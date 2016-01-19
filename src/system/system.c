@@ -1,6 +1,6 @@
 #include "system.h"
 
-#define SYSTEM_GRAVITY_FACTOR 25
+#define SYSTEM_GRAVITY_FACTOR 33
 
 void sys_render_update(Entities *entities, SDL_Renderer *renderer)
 {
@@ -41,25 +41,28 @@ void sys_input_update(Level *level, Entities *entities, const Uint8 *key, float 
 	for(int entity = 0; entity < ENTITY_COUNT; ++entity) {
 		if((entities->component_mask[entity] & CMP_POSITION) == CMP_POSITION &&
 		   (entities->component_mask[entity] & CMP_VELOCITY) == CMP_VELOCITY &&
-		   (entities->component_mask[entity] & CMP_COLLISION) == CMP_COLLISION &&
-		   (entities->component_mask[entity] & CMP_INPUT_PLAYER) == CMP_INPUT_PLAYER ) {
+		   (entities->component_mask[entity] & CMP_COLLISION) == CMP_COLLISION) {
 
+			if ((entities->component_mask[entity] & CMP_JUMP) == CMP_JUMP) {
+				if (key[SDL_SCANCODE_UP] && entities->jumps[entity].active == false) {
+					entities->jumps[entity].active = true;
+					entities->jumps[entity].currentForce = entities->jumps[entity].initialForce;
+				}
 
-			if (key[SDL_SCANCODE_UP]) {
-				entities->positions[entity].y -= entities->velocities[entity].y * delta;
-				entities->collisions[entity].bounds->y = (int) entities->positions[entity].y;
+				if (entities->jumps[entity].active) {
+					entities->positions[entity].y -= entities->jumps[entity].currentForce * delta ;
+				}
 			}
-			if (key[SDL_SCANCODE_DOWN]) {
-				entities->positions[entity].y += entities->velocities[entity].y * delta;
-				entities->collisions[entity].bounds->y = (int) entities->positions[entity].y;
-			}
-			if (key[SDL_SCANCODE_LEFT]) {
-				entities->positions[entity].x -= entities->velocities[entity].x * delta;
-				entities->collisions[entity].bounds->x = (int) entities->positions[entity].x;
-			}
-			if (key[SDL_SCANCODE_RIGHT]) {
-				entities->positions[entity].x += entities->velocities[entity].x * delta;
-				entities->collisions[entity].bounds->x = (int) entities->positions[entity].x;
+
+			if ((entities->component_mask[entity] & CMP_INPUT_PLAYER) == CMP_INPUT_PLAYER ) {
+				if (key[SDL_SCANCODE_LEFT]) {
+					entities->positions[entity].x -= entities->velocities[entity].x * delta;
+					entities->collisions[entity].bounds->x = (int) entities->positions[entity].x;
+				}
+				if (key[SDL_SCANCODE_RIGHT]) {
+					entities->positions[entity].x += entities->velocities[entity].x * delta;
+					entities->collisions[entity].bounds->x = (int) entities->positions[entity].x;
+				}
 			}
 
 			bool willCollide = false;
@@ -83,21 +86,24 @@ void sys_input_update(Level *level, Entities *entities, const Uint8 *key, float 
 			}
 
             if (willCollide == true) {
-				if (key[SDL_SCANCODE_UP]) {
-					entities->positions[entity].y += entities->velocities[entity].y * delta;
-					entities->collisions[entity].bounds->y = (int) entities->positions[entity].y;
+				if ((entities->component_mask[entity] & CMP_JUMP) == CMP_JUMP) {
+						entities->positions[entity].y -= entities->velocities[entity].y * delta;
+						entities->collisions[entity].bounds->y = (int) entities->positions[entity].y;
+						entities->jumps[entity].active = false;
 				}
-				if (key[SDL_SCANCODE_DOWN]) {
-					entities->positions[entity].y -= entities->velocities[entity].y * delta;
-					entities->collisions[entity].bounds->y = (int) entities->positions[entity].y;
-				}
-				if (key[SDL_SCANCODE_LEFT]) {
-					entities->positions[entity].x += entities->velocities[entity].x * delta;
-					entities->collisions[entity].bounds->x = (int) entities->positions[entity].x;
-				}
-				if (key[SDL_SCANCODE_RIGHT]) {
-					entities->positions[entity].x -= entities->velocities[entity].x * delta;
-					entities->collisions[entity].bounds->x = (int) entities->positions[entity].x;
+
+
+
+
+				if ((entities->component_mask[entity] & CMP_INPUT_PLAYER) == CMP_INPUT_PLAYER ) {
+					if (key[SDL_SCANCODE_LEFT]) {
+						entities->positions[entity].x += entities->velocities[entity].x * delta;
+						entities->collisions[entity].bounds->x = (int) entities->positions[entity].x;
+					}
+					if (key[SDL_SCANCODE_RIGHT]) {
+						entities->positions[entity].x -= entities->velocities[entity].x * delta;
+						entities->collisions[entity].bounds->x = (int) entities->positions[entity].x;
+					}
 				}
             }
 		}
@@ -111,7 +117,14 @@ void sys_gravitation_update(Level *level, Entities *entities, float delta) {
 		   (entities->component_mask[entity] & CMP_VELOCITY) == CMP_VELOCITY &&
 		   (entities->component_mask[entity] & CMP_COLLISION) == CMP_COLLISION &&
 		   (entities->component_mask[entity] & CMP_GRAVITATION) == CMP_GRAVITATION ) {
+
 			entities->positions[entity].y += 0.5 * SYSTEM_GRAVITY_FACTOR * 9.81 * delta;
+
+			if ((entities->component_mask[entity] & CMP_JUMP) == CMP_JUMP) {
+				if (entities->jumps[entity].active) {
+					entities->jumps[entity].currentForce -= 0.5 * SYSTEM_GRAVITY_FACTOR * 9.81 * delta;
+				}
+			}
 
 			bool willCollide = false;
 			for(int i = 0; i < LEVEL_TILE_COUNT; i++) {

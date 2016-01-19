@@ -16,6 +16,7 @@ struct entities_t
     Collision collisions[ENTITY_COUNT];
     Gravitation gravitations[ENTITY_COUNT];
     Straight_Movement straightMovements[ENTITY_COUNT];
+    Jump jumps[ENTITY_COUNT];
 };
 
 typedef struct entities_t Entities;
