@@ -52,8 +52,7 @@ bool collision_check(SDL_Rect *rect1, SDL_Rect *rect2) {
  * @param rect The rect to check
  */
 bool collision_check_level(Level *level, SDL_Rect *rect) {
-    //TODO: return collision_check(level->bounds, rect);
-    return false;
+    return collision_check(&level->bounds, rect);
 }
 
 /**

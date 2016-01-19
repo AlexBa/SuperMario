@@ -15,6 +15,7 @@ typedef struct entity_t {
     Gravitation gravitation;
     Straight_Movement straightMovement;
     Jump jump;
+    Check_Point check_point;
 } Entity;
 
 // Methods

@@ -8,7 +8,7 @@
 Entity* player_create(float x, float y) {
     Entity *player = entity_create();
     player->component_mask = CMP_POSITION | CMP_VELOCITY | CMP_COLLISION | CMP_RENDER |
-                             CMP_INPUT_PLAYER | CMP_GRAVITATION | CMP_JUMP;
+                             CMP_INPUT_PLAYER | CMP_GRAVITATION | CMP_JUMP | CMP_CHECK_POINT;
     player->position.x = x;
     player->position.y = y;
     player->position.oldX = x;
@@ -21,6 +21,8 @@ Entity* player_create(float x, float y) {
     player->collision.bounds->w = 32;
     player->collision.bounds->h = 32;
     player->render.name = "player.bmp";
+    player->check_point.x = x;
+    player->check_point.y = y;
     player->jump.active = false;
     player->jump.initialForce = 320;
     player->jump.currentForce = 0;

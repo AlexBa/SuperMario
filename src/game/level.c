@@ -9,6 +9,10 @@ Level* level_create(SDL_Renderer *renderer, const char *name) {
     Level *level = malloc(sizeof(Level));
     level->name = name;
     level->background = sprite_create(renderer, name);
+    level->bounds.x = 0;
+    level->bounds.y = 0;
+    level->bounds.w = LEVEL_WIDTH * TILE_WIDTH;
+    level->bounds.h = LEVEL_HEIGHT * TILE_HEIGHT;
 
     for (int i = 0; i < LEVEL_TILE_COUNT; i++) {
         level->tiles[i] = NULL;
@@ -27,7 +31,7 @@ Level* level_create(SDL_Renderer *renderer, const char *name) {
                                               "|     c  cc  c     |",
                                               "|       c  c       |",
                                               "|      c    c      |",
-                                              "____________________",};
+                                              "_____ ______________",};
 
     for (int i = 0; i < LEVEL_HEIGHT; i++) {
         for (int j = 0; j < LEVEL_WIDTH; j++) {

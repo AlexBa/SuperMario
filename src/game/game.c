@@ -109,6 +109,7 @@ void game_update(Game *game, float delta) {
             system_input_update(game->level->entities[i], game->key, delta);
             system_straight_movement_update(game->level->entities[i], delta);
             system_gravitation_update(game->level->entities[i], delta);
+            system_health_update(game->level->entities[i], game->level);
             system_collision_update(game->level->entities[i], game->level);
         }
     }

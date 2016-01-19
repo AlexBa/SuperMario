@@ -16,6 +16,7 @@
 void system_input_update(Entity *entity, const Uint8 *key, float delta);
 void system_gravitation_update(Entity *entity, float delta);
 void system_straight_movement_update(Entity *entity, float delta);
+void system_health_update(Entity *entity, Level *level);
 void system_collision_update(Entity *entity, Level *level);
 
 #endif

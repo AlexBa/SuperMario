@@ -61,6 +61,23 @@ void system_collision_update(Entity *entity, Level *level) {
 }
 
 /**
+ * Update the health logic
+ * @param entity
+ * @param level
+ */
+void system_health_update(Entity *entity, Level *level) {
+	if((entity->component_mask & CMP_POSITION) != 0 &&
+	   (entity->component_mask & CMP_COLLISION) != 0 &&
+	   (entity->component_mask & CMP_CHECK_POINT) != 0) {
+
+		if(!collision_check_level(level, entity->collision.bounds)) {
+			entity->position.x = entity->check_point.x;
+			entity->position.y = entity->check_point.y;
+		}
+	}
+}
+
+/**
  * Update the input logic
  * @param entity The next entity to update
  * @param delta The elapsed time

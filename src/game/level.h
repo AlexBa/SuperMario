@@ -18,6 +18,7 @@
 typedef struct level_t {
     const char *name;
     Sprite *background;
+    SDL_Rect bounds;
     Tile *tiles[LEVEL_TILE_COUNT];
     Entity *entities[LEVEL_ENTITY_COUNT];
 } Level;
