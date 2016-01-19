@@ -26,7 +26,7 @@ typedef struct sprite_t {
 Sprite spriteCache[SPRITE_COUNT];
 Sprite* sprite_create(SDL_Renderer *renderer, const char* name);
 void sprite_delete(Sprite *sprite);
-Sprite* sprite_get(const char* name);
+Sprite* sprite_get(SDL_Renderer *renderer, const char* name);
 void sprite_render(SDL_Renderer *renderer, Sprite *sprite, int x, int y);
 
 #endif

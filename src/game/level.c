@@ -36,13 +36,13 @@ Level* level_create(SDL_Renderer *renderer, const char *name) {
     for (int i = 0; i < LEVEL_HEIGHT; i++) {
         for (int j = 0; j < LEVEL_WIDTH; j++) {
             if (field[i][j] == '_') {
-                Tile *tile = tile_create(renderer, "player.bmp", TILE_BLOCK, (j * TILE_WIDTH), (i * TILE_HEIGHT));
+                Tile *tile = tile_create(renderer, "brick.bmp", TILE_BLOCK, (j * TILE_WIDTH), (i * TILE_HEIGHT));
                 level_add_tile(level, tile);
             } else if (field [i][j] == '|') {
-                Tile *tile = tile_create(renderer, "player.bmp", TILE_BLOCK, (j * TILE_WIDTH), (i * TILE_HEIGHT));
+                Tile *tile = tile_create(renderer, "brick.bmp", TILE_BLOCK, (j * TILE_WIDTH), (i * TILE_HEIGHT));
                 level_add_tile(level, tile);
             } else if (field [i][j] == 'c') {
-                Tile *tile = tile_create(renderer, "player.bmp", TILE_BLOCK, (j * TILE_WIDTH), (i * TILE_HEIGHT));
+                Tile *tile = tile_create(renderer, "brick.bmp", TILE_BLOCK, (j * TILE_WIDTH), (i * TILE_HEIGHT));
                 level_add_tile(level, tile);
             }
         }

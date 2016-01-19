@@ -7,6 +7,7 @@
 #include <SDL2/SDL.h>
 #include "../entity/entity.h"
 #include "../entity/player.h"
+#include "../entity/mushroom.h"
 #include "../entity/enemy.h"
 #include "../system/system.h"
 #include "level.h"

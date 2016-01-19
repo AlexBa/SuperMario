@@ -40,6 +40,10 @@ typedef struct cmp_jump_t {
     float maxFallSpeed;
 } Jump;
 
+typedef struct cmp_item_t {
+    const char *type;
+} Item;
+
 typedef struct cmp_check_point_t {
     float x;
     float y;
@@ -55,7 +59,8 @@ enum component {
     CMP_GRAVITATION = 1 << 5,
     CMP_STRAIGHT_MOVEMENT = 1 << 6,
     CMP_JUMP = 1 << 7,
-    CMP_CHECK_POINT = 1 << 8
+    CMP_CHECK_POINT = 1 << 8,
+    CMP_ITEM = 1 << 9
 };
 
 #endif //SUPERMARIO_COMPONENT_H

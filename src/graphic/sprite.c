@@ -7,7 +7,7 @@
  * @return Either the sprite or NULL
  */
 Sprite* sprite_create(SDL_Renderer *renderer, const char *name) {
-    for(int sprite = 0; sprite < SPRITE_COUNT; ++sprite) {
+    for(int sprite = 1; sprite < SPRITE_COUNT; ++sprite) {
         if(spriteCache[sprite].cashId == SPRITE_EMPTY) {
             spriteCache[sprite].cashId = sprite;
             spriteCache[sprite].texture = texture_create(renderer, name);
@@ -44,18 +44,16 @@ void sprite_delete(Sprite *sprite) {
 /**
  * Get an existing sprite by the name
  * @param name The path of the sprite
- * @return Either the sprite ID or an related error code
+ * @return The related sprite
  */
-Sprite* sprite_get(const char *name) {
-    for(int sprite = 0; sprite < SPRITE_COUNT; ++sprite) {
-
-        if(strcmp(spriteCache[sprite].name, name) == 0) {
+Sprite* sprite_get(SDL_Renderer *renderer, const char *name) {
+    for(int sprite = 0; sprite < SPRITE_COUNT; sprite++) {
+        if(spriteCache[sprite].cashId != SPRITE_EMPTY && strcmp(spriteCache[sprite].name, name) == 0) {
             return &spriteCache[sprite];
         }
     }
 
-    printf("ERROR: Failed to find the sprite '%s'.\n", name);
-    return NULL;
+    return sprite_create(renderer, name);
 }
 
 /**

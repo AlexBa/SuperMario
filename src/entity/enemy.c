@@ -21,7 +21,7 @@ Entity* enemy_create(float x, float y) {
     enemy->collision.bounds->w = 32;
     enemy->collision.bounds->h = 32;
     enemy->straightMovement.direction = "left";
-    enemy->render.name = "player.bmp";
+    enemy->render.name = "gumba.bmp";
 
     return enemy;
 }

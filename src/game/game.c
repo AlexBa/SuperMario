@@ -36,7 +36,7 @@ void game_delete(Game *game) {
  */
 void game_run(Game *game) {
     //TODO: Example code. Remove it later
-    game->level = level_create(game->renderer, "player.bmp");
+    game->level = level_create(game->renderer, "back.bmp");
 
     // Create the player
     Entity *player = player_create(64.0f, 240.0f);
@@ -45,6 +45,10 @@ void game_run(Game *game) {
     // Create the enemy
     Entity *enemy = enemy_create(90.0f, 240.0f);
     level_add_entity(game->level, enemy);
+
+    // Create the enemy
+    Entity *mushroom = mushroom_create(300.0f, 60.0f);
+    level_add_entity(game->level, mushroom);
 
     game->last_ticks = SDL_GetTicks();
     game_continue(game);

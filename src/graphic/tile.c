@@ -13,10 +13,7 @@ Tile* tile_create(SDL_Renderer *renderer, const char* name, int type, int x, int
     Tile *tile = malloc(sizeof(Tile));
     tile->name = name;
     tile->type = type;
-    tile->sprite = sprite_get(name);
-    if(tile->sprite == SPRITE_EMPTY) {
-        tile->sprite = sprite_create(renderer, name);
-    }
+    tile->sprite = sprite_get(renderer, name);
     tile->bounds = malloc(sizeof(SDL_Rect));
     tile->bounds->x = x;
     tile->bounds->y = y;

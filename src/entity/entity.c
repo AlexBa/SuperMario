@@ -22,6 +22,6 @@ void entity_delete(Entity *entity) {
  */
 void entity_render(SDL_Renderer *renderer, Entity *entity) {
     if((entity->component_mask & CMP_POSITION) != 0 && (entity->component_mask & CMP_RENDER) != 0) {
-        sprite_render(renderer, sprite_get(entity->render.name), (int) entity->position.x, (int) entity->position.y);
+        sprite_render(renderer, sprite_get(renderer, entity->render.name), (int) entity->position.x, (int) entity->position.y);
     }
 }
