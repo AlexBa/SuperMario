@@ -5,9 +5,12 @@
 #include "../entity/entity.h"
 #include "../component/component.h"
 #include "collision.h"
+#include "../game/game.h"
 #include "../graphic/sprite.h"
 #include "../game/level.h"
 #include "../entity/entity.h"
+
+
 
 // Constants
 #define SYSTEM_GRAVITY_FACTOR 35

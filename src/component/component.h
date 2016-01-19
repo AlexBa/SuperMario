@@ -45,6 +45,10 @@ typedef struct cmp_check_point_t {
     float y;
 } Check_Point;
 
+typedef struct cmp_health {
+    int counter;
+} Health;
+
 enum component {
     CMP_NONE = 0,
     CMP_RENDER = 1 << 0,
@@ -55,7 +59,8 @@ enum component {
     CMP_GRAVITATION = 1 << 5,
     CMP_STRAIGHT_MOVEMENT = 1 << 6,
     CMP_JUMP = 1 << 7,
-    CMP_CHECK_POINT = 1 << 8
+    CMP_CHECK_POINT = 1 << 8,
+    CMP_HEALTH = 1 << 9
 };
 
 #endif //SUPERMARIO_COMPONENT_H

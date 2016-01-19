@@ -9,6 +9,7 @@ Game* game_create() {
     game->window = NULL;
     game->renderer = NULL;
     game->pause = false;
+    game->running = false;
 
     SDL_CreateWindowAndRenderer(0, 0, SDL_WINDOW_MAXIMIZED, &game->window, &game->renderer);
     if (game->window == NULL || game->renderer == NULL) {
@@ -49,18 +50,18 @@ void game_run(Game *game) {
     game->last_ticks = SDL_GetTicks();
     game_continue(game);
 
-    int done = 0;
-    while(!done){
+    game->running = true;
+    while(game->running){
         game->key = SDL_GetKeyboardState(NULL);
         SDL_Event ev;
         while(SDL_PollEvent(&ev)) {
             switch(ev.type) {
                 case SDL_QUIT:
-                    done = 1;
+                    game->running = false;
                     break;
                 case SDL_KEYDOWN:
                     if(ev.key.keysym.sym == SDLK_ESCAPE)
-                        done = 1;
+                        game->running = false;
                     if(ev.key.keysym.sym == SDLK_p)
                         break;
                 case SDL_KEYUP:
