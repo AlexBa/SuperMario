@@ -17,6 +17,7 @@ typedef struct entity_t {
     Jump jump;
     Check_Point check_point;
     Item item;
+    Health health;
 } Entity;
 
 // Methods

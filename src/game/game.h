@@ -18,6 +18,7 @@ typedef struct game_t {
     SDL_Renderer *renderer;
     Level *level;
     bool pause;
+    bool running;
     unsigned int last_ticks;
     unsigned int current_ticks;
     const Uint8 *key;

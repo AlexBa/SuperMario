@@ -2,9 +2,9 @@
 #include <stdio.h>
 #include <SDL2/SDL.h>
 #include "game/game.h"
-
+Game *game = NULL;
 int main(int argc, char** argv) {
-    Game *game = NULL;
+
 
     // Init SDL2
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {

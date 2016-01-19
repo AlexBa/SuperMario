@@ -1,5 +1,7 @@
 #include "system.h"
 
+extern Game *game;
+
 /**
  * Update the collision logic
  * @param entity The next entity to update
@@ -68,11 +70,16 @@ void system_collision_update(Entity *entity, Level *level) {
 void system_health_update(Entity *entity, Level *level) {
 	if((entity->component_mask & CMP_POSITION) != 0 &&
 	   (entity->component_mask & CMP_COLLISION) != 0 &&
-	   (entity->component_mask & CMP_CHECK_POINT) != 0) {
+	   (entity->component_mask & CMP_CHECK_POINT) != 0 &&
+	   (entity->component_mask & CMP_HEALTH) !=0 ) {
 
 		if(!collision_check_level(level, entity->collision.bounds)) {
 			entity->position.x = entity->check_point.x;
 			entity->position.y = entity->check_point.y;
+			entity->health.counter--;
+			if (entity->health.counter == 0) {
+				game->running = false;
+			}
 		}
 	}
 }

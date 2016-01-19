@@ -15,7 +15,7 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Werror")
 include_directories(${PROJECT_SOURCE_DIR}/include)
 link_directories(${PROJECT_SOURCE_DIR}/lib)
 
-configure_file(img/player.bmp ${CMAKE_SOURCE_DIR}/bin COPYONLY)
+configure_file(bin/player.bmp ${CMAKE_SOURCE_DIR}/bin COPYONLY)
 configure_file(img/back.bmp ${CMAKE_SOURCE_DIR}/bin COPYONLY)
 configure_file(img/mushroom.bmp ${CMAKE_SOURCE_DIR}/bin COPYONLY)
 configure_file(img/gumba.bmp ${CMAKE_SOURCE_DIR}/bin COPYONLY)
