@@ -1,6 +1,6 @@
 #include "system.h"
 
-#define SYSTEM_GRAVITY_FACTOR 33
+#define SYSTEM_GRAVITY_FACTOR 35
 
 void sys_render_update(Entities *entities, SDL_Renderer *renderer)
 {
@@ -37,6 +37,63 @@ void sys_render_update(Entities *entities, SDL_Renderer *renderer)
 	}
 }
 
+void sys_collision_update(Level *level, Entities *entities) {
+	for(int entity = 0; entity < ENTITY_COUNT; ++entity) {
+		if((entities->component_mask[entity] & CMP_POSITION) == CMP_POSITION &&
+		   (entities->component_mask[entity] & CMP_COLLISION) == CMP_COLLISION) {
+
+			// Get the current position and collision bounds of the entity
+			Position *position = &entities->positions[entity];
+			Collision *collision = &entities->collisions[entity];
+
+			// Apply the current position to the collision bounds
+			collision->bounds->x = (int) position->x;
+
+			// Check the collision
+			if (collision_check_tiles(level->tiles, level->tileFree, collision->bounds) ||
+				collision_check_entities(entities, collision->bounds)) {
+				position->x = position->oldX;
+				collision->bounds->x = (int) position->oldX;
+
+				if((entities->component_mask[entity] & CMP_STRAIGHT_MOVEMENT) == CMP_STRAIGHT_MOVEMENT) {
+					if (strcmp(entities->straightMovements[entity].direction, "left") == 0) {
+						entities->straightMovements[entity].direction = "right";
+					} else {
+						entities->straightMovements[entity].direction = "left";
+					}
+				}
+			}
+
+			// Set the old position for the next time
+			position->oldX = position->x;
+
+			// --------------------------------------
+
+			// Apply the current position to the collision bounds
+			collision->bounds->y = (int) position->y;
+
+			// Check the collision
+			if (collision_check_tiles(level->tiles, level->tileFree, collision->bounds) ||
+				collision_check_entities(entities, collision->bounds)) {
+
+				if((entities->component_mask[entity] & CMP_JUMP) == CMP_JUMP && entities->jumps[entity].active == true) {
+					if (position->y > position->oldY) {
+						entities->jumps[entity].active = false;
+					}
+
+					entities->jumps[entity].currentForce = 0;
+				}
+
+				position->y = position->oldY;
+				collision->bounds->y = (int) position->oldY;
+			}
+
+			// Set the old position for the next time
+			position->oldY = position->y;
+		}
+	}
+}
+
 void sys_input_update(Level *level, Entities *entities, const Uint8 *key, float delta) {
 	for(int entity = 0; entity < ENTITY_COUNT; ++entity) {
 		if((entities->component_mask[entity] & CMP_POSITION) == CMP_POSITION &&
@@ -50,66 +107,21 @@ void sys_input_update(Level *level, Entities *entities, const Uint8 *key, float 
 				}
 
 				if (entities->jumps[entity].active) {
-					entities->positions[entity].y -= entities->jumps[entity].currentForce * delta ;
+					entities->positions[entity].y -= entities->jumps[entity].currentForce * delta * 1.2 ;
 				}
 			}
 
 			if ((entities->component_mask[entity] & CMP_INPUT_PLAYER) == CMP_INPUT_PLAYER ) {
 				if (key[SDL_SCANCODE_LEFT]) {
 					entities->positions[entity].x -= entities->velocities[entity].x * delta;
-					entities->collisions[entity].bounds->x = (int) entities->positions[entity].x;
 				}
 				if (key[SDL_SCANCODE_RIGHT]) {
 					entities->positions[entity].x += entities->velocities[entity].x * delta;
-					entities->collisions[entity].bounds->x = (int) entities->positions[entity].x;
 				}
 			}
-
-			bool willCollide = false;
-			for(int i = 0; i < LEVEL_TILE_COUNT; i++) {
-				if (level->tileFree[i] == 0) {
-					Position *p = &entities->positions[entity];
-					Collision *c = &entities->collisions[entity];
-					Tile *t = level->tiles[i];
-
-					SDL_Rect futureBounds;
-					futureBounds.x = (int)p->x;
-					futureBounds.y = (int)p->y;
-					futureBounds.w = c->bounds->w;
-					futureBounds.h = c->bounds->h;
-
-					willCollide = collision_check(&futureBounds, t->bounds);
-					if (willCollide) {
-						break;
-					}
-				}
-			}
-
-            if (willCollide == true) {
-				if ((entities->component_mask[entity] & CMP_JUMP) == CMP_JUMP) {
-						entities->positions[entity].y -= entities->velocities[entity].y * delta;
-						entities->collisions[entity].bounds->y = (int) entities->positions[entity].y;
-						entities->jumps[entity].active = false;
-				}
-
-
-
-
-				if ((entities->component_mask[entity] & CMP_INPUT_PLAYER) == CMP_INPUT_PLAYER ) {
-					if (key[SDL_SCANCODE_LEFT]) {
-						entities->positions[entity].x += entities->velocities[entity].x * delta;
-						entities->collisions[entity].bounds->x = (int) entities->positions[entity].x;
-					}
-					if (key[SDL_SCANCODE_RIGHT]) {
-						entities->positions[entity].x -= entities->velocities[entity].x * delta;
-						entities->collisions[entity].bounds->x = (int) entities->positions[entity].x;
-					}
-				}
-            }
 		}
 	}
 }
-
 
 void sys_gravitation_update(Level *level, Entities *entities, float delta) {
 	for(unsigned int entity = 0; entity < ENTITY_COUNT; ++entity) {
@@ -122,32 +134,8 @@ void sys_gravitation_update(Level *level, Entities *entities, float delta) {
 
 			if ((entities->component_mask[entity] & CMP_JUMP) == CMP_JUMP) {
 				if (entities->jumps[entity].active) {
-					entities->jumps[entity].currentForce -= 0.5 * SYSTEM_GRAVITY_FACTOR * 9.81 * delta;
+					entities->jumps[entity].currentForce -= 0.5 * SYSTEM_GRAVITY_FACTOR * 9.81 * delta * 1.5;
 				}
-			}
-
-			bool willCollide = false;
-			for(int i = 0; i < LEVEL_TILE_COUNT; i++) {
-				if (level->tileFree[i] == 0) {
-					Position *p = &entities->positions[entity];
-					Collision *c = &entities->collisions[entity];
-					Tile *t = level->tiles[i];
-
-					SDL_Rect futureBounds;
-					futureBounds.x = (int)p->x;
-					futureBounds.y = (int)p->y;
-					futureBounds.w = c->bounds->w;
-					futureBounds.h = c->bounds->h;
-
-					willCollide = collision_check(&futureBounds, t->bounds);
-					if (willCollide) {
-						break;
-					}
-				}
-			}
-
-			if (willCollide) {
-				entities->positions[entity].y -= 0.5 * SYSTEM_GRAVITY_FACTOR * 9.81 * delta;
 			}
 		}
 	}
@@ -158,46 +146,12 @@ void sys_straight_movement_update(Level *level, Entities *entities, float delta)
 	{
 		if((entities->component_mask[entity] & CMP_POSITION) == CMP_POSITION &&
 		   (entities->component_mask[entity] & CMP_VELOCITY) == CMP_VELOCITY &&
-		   (entities->component_mask[entity] & CMP_COLLISION) == CMP_COLLISION &&
-		   (entities->component_mask[entity] & CMP_STRAIGHT_MOVEMENT) == CMP_STRAIGHT_MOVEMENT &&
-		   (entities->component_mask[entity] & CMP_GRAVITATION) == CMP_GRAVITATION ) {
-
-
+		   (entities->component_mask[entity] & CMP_STRAIGHT_MOVEMENT) == CMP_STRAIGHT_MOVEMENT) {
 
 			if (strcmp(entities->straightMovements[entity].direction, "left") == 0) {
 				entities->positions[entity].x -= entities->velocities[entity].x * delta;
 			} else {
 				entities->positions[entity].x += entities->velocities[entity].x * delta;
-			}
-
-			bool willCollide = false;
-			for(int i = 0; i < LEVEL_TILE_COUNT; i++) {
-				if (level->tileFree[i] == 0) {
-					Position *p = &entities->positions[entity];
-					Collision *c = &entities->collisions[entity];
-					Tile *t = level->tiles[i];
-
-					SDL_Rect futureBounds;
-					futureBounds.x = (int)p->x;
-					futureBounds.y = (int)p->y;
-					futureBounds.w = c->bounds->w;
-					futureBounds.h = c->bounds->h;
-
-					willCollide = collision_check(&futureBounds, t->bounds);
-					if (willCollide) {
-						break;
-					}
-				}
-			}
-
-			if (willCollide) {
-				if (strcmp(entities->straightMovements[entity].direction, "left") == 0) {
-					entities->positions[entity].x += entities->velocities[entity].x * delta;
-					entities->straightMovements[entity].direction = "right";
-				} else {
-					entities->positions[entity].x -= entities->velocities[entity].x * delta;
-					entities->straightMovements[entity].direction = "left";
-				}
 			}
 		}
 	}

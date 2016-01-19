@@ -13,5 +13,6 @@ void sys_input_update(Level *level, Entities *entities, const Uint8 *key, float 
 void sys_render_update(Entities *entities, SDL_Renderer *renderer);
 void sys_gravitation_update(Level *level, Entities *entities, float delta);
 void sys_straight_movement_update(Level *level, Entities *entities, float delta);
+void sys_collision_update(Level *level, Entities *entities);
 
 #endif //SUPERMARIO_SYSTEM_H

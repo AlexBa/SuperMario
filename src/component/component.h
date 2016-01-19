@@ -12,6 +12,8 @@ typedef struct cmp_render_t {
 typedef struct cmp_position_t {
     float x;
     float y;
+    float oldX;
+    float oldY;
 } Position;
 
 typedef struct cmp_velocity_t {

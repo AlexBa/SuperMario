@@ -45,3 +45,51 @@ bool collision_check(SDL_Rect *rect1, SDL_Rect *rect2) {
     //If none of the sides from A are outside B
     return true;
 }
+
+/**
+ * Check if the level is colliding with the rect
+ * @param level The collision for the level
+ * @param rect The rect to check
+ */
+bool collision_check_level(Level *level, SDL_Rect *rect) {
+    //TODO: return collision_check(level->bounds, rect);
+    return false;
+}
+
+/**
+ * Check if the rect is colliding with any entity
+ * @param tiles The array of entities to check
+ * @param tileFree Indicates if a tile exists at the given position
+ * @param rect The rect to check
+ */
+bool collision_check_entities(Entities *entities, SDL_Rect *rect) {
+    for(int i = 0; i < ENTITY_COUNT; i++) {
+        if ((entities->component_mask[i] & CMP_COLLISION) == CMP_COLLISION) {
+            Collision *collision = &entities->collisions[i];
+
+            if (collision->bounds->x != rect->x &&
+                collision->bounds->y != rect->y &&
+                collision_check(entities->collisions[i].bounds, rect)) {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+/**
+ * Check if the rect is colliding with any tile
+ * @param tiles The array of tiles to check
+ * @param tileFree Indicates if a tile exists at the given position
+ * @param rect The rect to check
+ */
+bool collision_check_tiles(Tile *tiles[], int *tileFree, SDL_Rect *rect) {
+    for(int i = 0; i < LEVEL_TILE_COUNT; i++) {
+        if (tileFree[i] == 0 && collision_check(tiles[i]->bounds, rect)) {
+            return true;
+        }
+    }
+
+    return false;
+}

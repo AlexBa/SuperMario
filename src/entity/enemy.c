@@ -9,6 +9,8 @@ unsigned int enemy_create(Entities *entities, float x, float y) {
     entities->component_mask[entity] = CMP_POSITION | CMP_VELOCITY | CMP_COLLISION | CMP_RENDER | CMP_GRAVITATION | CMP_STRAIGHT_MOVEMENT;
     entities->positions[entity].x = x;
     entities->positions[entity].y = y;
+    entities->positions[entity].oldX = x;
+    entities->positions[entity].oldY = y;
     entities->velocities[entity].x = 100;
     entities->velocities[entity].y = 100;
     entities->collisions[entity].bounds = malloc(sizeof(SDL_Rect));
