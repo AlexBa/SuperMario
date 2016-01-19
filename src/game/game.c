@@ -44,11 +44,11 @@ void game_run(Game *game) {
     level_add_entity(game->level, player);
 
     // Create the enemy
-    Entity *enemy = enemy_create(90.0f, 240.0f);
+    Entity *enemy = enemy_create(300.0f, 60.0f);
     level_add_entity(game->level, enemy);
 
     // Create the enemy
-    Entity *mushroom = mushroom_create(300.0f, 60.0f);
+    Entity *mushroom = mushroom_create(400.0f, 60.0f);
     level_add_entity(game->level, mushroom);
 
     game->last_ticks = SDL_GetTicks();
@@ -115,6 +115,7 @@ void game_update(Game *game, float delta) {
             system_straight_movement_update(game->level->entities[i], delta);
             system_gravitation_update(game->level->entities[i], delta);
             system_health_update(game->level->entities[i], game->level);
+            system_deadly_update(game->level->entities[i], game->level);
             system_collision_update(game->level->entities[i], game->level);
         }
     }

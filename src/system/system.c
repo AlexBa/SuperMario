@@ -18,6 +18,8 @@ void system_collision_update(Entity *entity, Level *level) {
 		// Apply the current position to the collision bounds
 		collision->bounds->x = (int) position->x;
 
+		collision_check_deadly_entities(level->entities, entity->collision.bounds);
+
 		// Check the collision
 		if (collision_check_tiles(level->tiles, collision->bounds) ||
 			collision_check_entities(level->entities, collision->bounds)) {
@@ -69,17 +71,18 @@ void system_collision_update(Entity *entity, Level *level) {
  */
 void system_health_update(Entity *entity, Level *level) {
 	if((entity->component_mask & CMP_POSITION) != 0 &&
-	   (entity->component_mask & CMP_COLLISION) != 0 &&
 	   (entity->component_mask & CMP_CHECK_POINT) != 0 &&
 	   (entity->component_mask & CMP_HEALTH) !=0 ) {
 
-		if(!collision_check_level(level, entity->collision.bounds)) {
-			entity->position.x = entity->check_point.x;
-			entity->position.y = entity->check_point.y;
+		if((level->bounds.y + level->bounds.h) < entity->position.y) {
 			entity->health.counter--;
 			if (entity->health.counter == 0) {
 				game->running = false;
+				return;
 			}
+
+			entity->position.x = entity->check_point.x;
+			entity->position.y = entity->check_point.y;
 		}
 	}
 }
@@ -92,16 +95,20 @@ void system_health_update(Entity *entity, Level *level) {
 void system_input_update(Entity *entity, const Uint8 *key, float delta) {
 	if((entity->component_mask & CMP_POSITION) == CMP_POSITION &&
 	   (entity->component_mask & CMP_VELOCITY) == CMP_VELOCITY &&
+	   (entity->component_mask & CMP_JUMP) == CMP_JUMP) {
+		if (entity->jump.active) {
+			entity->position.y -= entity->jump.currentForce * delta * 1.2 ;
+		}
+	}
+
+	if((entity->component_mask & CMP_POSITION) == CMP_POSITION &&
+	   (entity->component_mask & CMP_VELOCITY) == CMP_VELOCITY &&
 	   (entity->component_mask & CMP_COLLISION) == CMP_COLLISION) {
 
 		if ((entity->component_mask & CMP_JUMP) == CMP_JUMP) {
 			if (key[SDL_SCANCODE_UP] && entity->jump.active == false) {
 				entity->jump.active = true;
 				entity->jump.currentForce = entity->jump.initialForce;
-			}
-
-			if (entity->jump.active) {
-				entity->position.y -= entity->jump.currentForce * delta * 1.2 ;
 			}
 		}
 
@@ -124,7 +131,6 @@ void system_input_update(Entity *entity, const Uint8 *key, float delta) {
 void system_gravitation_update(Entity *entity, float delta) {
 	if((entity->component_mask & CMP_POSITION) == CMP_POSITION &&
 	   (entity->component_mask & CMP_VELOCITY) == CMP_VELOCITY &&
-	   (entity->component_mask & CMP_COLLISION) == CMP_COLLISION &&
 	   (entity->component_mask & CMP_GRAVITATION) == CMP_GRAVITATION ) {
 
 		entity->position.y += 0.5 * SYSTEM_GRAVITY_FACTOR * 9.81 * delta;
@@ -153,4 +159,17 @@ void system_straight_movement_update(Entity *entity,  float delta) {
 			entity->position.x += entity->velocity.x * delta;
 		}
 	}
+}
+
+void system_deadly_update(Entity *entity, Level *level) {
+	if ((entity->component_mask & CMP_COLLISION) != 0 &&
+		(entity->component_mask & CMP_JUMP) != 0 &&
+		(entity->component_mask & CMP_DEADLY) != 0) {
+			if (entity->deadly.isDead) {
+				entity->jump.active = true;
+				entity->jump.currentForce = entity->jump.initialForce;
+				entity->component_mask ^= CMP_COLLISION;
+			}
+		}
+
 }

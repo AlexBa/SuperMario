@@ -69,9 +69,28 @@ bool collision_check_entities(Entity *entities[], SDL_Rect *rect) {
             if ((entity->component_mask & CMP_COLLISION) != 0) {
                 Collision *collision = &entity->collision;
 
-                if (collision->bounds->x != rect->x &&
-                    collision->bounds->y != rect->y &&
+                if (collision->bounds != rect &&
                     collision_check(collision->bounds, rect)) {
+                    return true;
+                }
+            }
+        }
+    }
+
+    return false;
+}
+
+bool collision_check_deadly_entities(Entity *entities[], SDL_Rect *rect) {
+    for(int i = 0; i < LEVEL_ENTITY_COUNT; i++) {
+        if (entities[i] != NULL) {
+            Entity *entity = entities[i];
+            if ((entity->component_mask & CMP_COLLISION) != 0 &&
+                (entity->component_mask & CMP_DEADLY) != 0) {
+                Collision *collision = &entity->collision;
+                Deadly *deadly = &entity->deadly;
+                if (collision->bounds != rect &&
+                    collision_check(collision->bounds, rect)) {
+                    deadly->isDead = true;
                     return true;
                 }
             }

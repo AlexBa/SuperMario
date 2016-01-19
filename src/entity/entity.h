@@ -18,6 +18,7 @@ typedef struct entity_t {
     Check_Point check_point;
     Item item;
     Health health;
+    Deadly deadly;
 } Entity;
 
 // Methods

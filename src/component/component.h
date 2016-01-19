@@ -53,6 +53,10 @@ typedef struct cmp_health {
     int counter;
 } Health;
 
+typedef struct cmp_deadly {
+    bool isDead;
+} Deadly;
+
 enum component {
     CMP_NONE = 0,
     CMP_RENDER = 1 << 0,
@@ -65,7 +69,8 @@ enum component {
     CMP_JUMP = 1 << 7,
     CMP_CHECK_POINT = 1 << 8,
     CMP_ITEM = 1 << 9,
-    CMP_HEALTH = 1 << 10
+    CMP_HEALTH = 1 << 10,
+    CMP_DEADLY = 1 << 11
 };
 
 #endif //SUPERMARIO_COMPONENT_H
