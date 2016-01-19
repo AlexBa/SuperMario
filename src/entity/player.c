@@ -1,24 +1,30 @@
 #include "player.h"
 
-unsigned int player_create(Entities *entities, float x, float y) {
-    unsigned int entity = entity_create(entities);
-    entities->component_mask[entity] = CMP_POSITION | CMP_VELOCITY | CMP_COLLISION | CMP_RENDER | CMP_INPUT_PLAYER | CMP_GRAVITATION | CMP_JUMP;
-    entities->positions[entity].x = x;
-    entities->positions[entity].y = y;
-    entities->positions[entity].oldX = x;
-    entities->positions[entity].oldY = y;
-    entities->velocities[entity].x = 150;
-    entities->velocities[entity].y = 150;
-    entities->collisions[entity].bounds = malloc(sizeof(SDL_Rect));
-    entities->collisions[entity].bounds->x = (int) x;
-    entities->collisions[entity].bounds->y = (int) y;
-    entities->collisions[entity].bounds->w = 32;
-    entities->collisions[entity].bounds->h = 32;
-    entities->renders[entity].name = "player.bmp";
-    entities->jumps[entity].active = false;
-    entities->jumps[entity].initialForce = 320;
-    entities->jumps[entity].currentForce = 0;
-    entities->jumps[entity].maxFallSpeed = 3;
+/**
+ * Create a new player
+ * @param x The horizontal position
+ * @param y The vertical position
+ */
+Entity* player_create(float x, float y) {
+    Entity *player = entity_create();
+    player->component_mask = CMP_POSITION | CMP_VELOCITY | CMP_COLLISION | CMP_RENDER |
+                             CMP_INPUT_PLAYER | CMP_GRAVITATION | CMP_JUMP;
+    player->position.x = x;
+    player->position.y = y;
+    player->position.oldX = x;
+    player->position.oldY = y;
+    player->velocity.x = 150;
+    player->velocity.y = 150;
+    player->collision.bounds = malloc(sizeof(SDL_Rect));
+    player->collision.bounds->x = (int) x;
+    player->collision.bounds->y = (int) y;
+    player->collision.bounds->w = 32;
+    player->collision.bounds->h = 32;
+    player->render.name = "player.bmp";
+    player->jump.active = false;
+    player->jump.initialForce = 320;
+    player->jump.currentForce = 0;
+    player->jump.maxFallSpeed = 3;
 
-    return entity;
+    return player;
 }

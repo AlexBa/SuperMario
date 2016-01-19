@@ -1,9 +1,10 @@
-#include <stdio.h>
-#include "entity.h"
-
 #ifndef SUPERMARIO_ENEMY_H
 #define SUPERMARIO_ENEMY_H
 
-unsigned int enemy_create(Entities *entities, float x, float y);
+#include <stdio.h>
+#include "entity.h"
 
-#endif //SUPERMARIO_ENEMY_H
+// Methods
+Entity* enemy_create(float x, float y);
+
+#endif

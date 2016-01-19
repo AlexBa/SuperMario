@@ -1,30 +1,36 @@
 #include "level.h"
-#define Y 10
-#define X 20
 
+/**
+ * Create a new level
+ * @param renderer
+ * @param name
+ */
 Level* level_create(SDL_Renderer *renderer, const char *name) {
     Level *level = malloc(sizeof(Level));
     level->name = name;
     level->background = sprite_create(renderer, name);
 
     for (int i = 0; i < LEVEL_TILE_COUNT; i++) {
-        level->tileFree[i] = 1;
+        level->tiles[i] = NULL;
     }
 
-    char field [Y][X] = {"____________________",
-                         "|                  |",
-                         "|                  |",
-                         "|        cc        |",
-                         "|        cc        |",
-                         "|      cccccc      |",
-                         "|     c  cc  c     |",
-                         "|       c  c       |",
-                         "|      c    c      |",
-                         "____________________",
-                        };
+    for (int i = 0; i < LEVEL_ENTITY_COUNT; i++) {
+        level->entities[i] = NULL;
+    }
 
-    for (int i = 0; i < Y; i++) {
-        for (int j = 0; j < X; j++) {
+    char field [LEVEL_HEIGHT][LEVEL_WIDTH] = {"____________________",
+                                              "|                  |",
+                                              "|                  |",
+                                              "|        cc        |",
+                                              "|        cc        |",
+                                              "|      cccccc      |",
+                                              "|     c  cc  c     |",
+                                              "|       c  c       |",
+                                              "|      c    c      |",
+                                              "____________________",};
+
+    for (int i = 0; i < LEVEL_HEIGHT; i++) {
+        for (int j = 0; j < LEVEL_WIDTH; j++) {
             if (field[i][j] == '_') {
                 Tile *tile = tile_create(renderer, "player.bmp", TILE_BLOCK, (j * TILE_WIDTH), (i * TILE_HEIGHT));
                 level_add_tile(level, tile);
@@ -41,19 +47,35 @@ Level* level_create(SDL_Renderer *renderer, const char *name) {
     return level;
 }
 
+/**
+ * Delete the level
+ * @param level
+ */
 void level_delete(Level *level) {
     for (int i = 0; i < LEVEL_TILE_COUNT; i++) {
-        free(level->tiles[i]);
+        Tile *tile = level->tiles[i];
+        level_remove_tile(level, tile);
+        tile_delete(tile);
+    }
+
+    for (int i = 0; i < LEVEL_TILE_COUNT; i++) {
+        Entity *entity = level->entities[i];
+        level_remove_entity(level, entity);
+        entity_delete(entity);
     }
 
     free(level);
 }
 
+/**
+ * Add a tile to the level
+ * @param level
+ * @param tile
+ */
 void level_add_tile(Level *level, Tile *tile) {
     for (int i = 0; i < LEVEL_TILE_COUNT; i++) {
-        if (level->tileFree[i] == 1) {
+        if (level->tiles[i] == NULL) {
             level->tiles[i] = tile;
-            level->tileFree[i] = 0;
             return;
         }
     }
@@ -62,13 +84,16 @@ void level_add_tile(Level *level, Tile *tile) {
     exit(1);
 }
 
+/**
+ * Remove a tile from the level
+ * @note You have to free the space of the tile by your own
+ * @param level
+ * @param tile
+ */
 void level_remove_tile(Level *level, Tile *tile) {
     for (int i = 0; i < LEVEL_TILE_COUNT; i++) {
-        if (level->tiles[i]->name == tile->name &&
-            level->tiles[i]->type == tile->type &&
-            level->tiles[i]->bounds->x == tile->bounds->x &&
-            level->tiles[i]->bounds->y == tile->bounds->y) {
-            free(level->tiles[i]);
+        if (level->tiles[i] == tile) {
+            level->tiles[i] = NULL;
             return;
         }
     }
@@ -77,12 +102,58 @@ void level_remove_tile(Level *level, Tile *tile) {
     exit(1);
 }
 
+/**
+ * Add an entity to the level
+ * @param level
+ * @param entity
+ */
+void level_add_entity(Level *level, Entity *entity) {
+    for (int i = 0; i < LEVEL_ENTITY_COUNT; i++) {
+        if(level->entities[i] == NULL) {
+            level->entities[i] = entity;
+            return;
+        }
+    }
+
+    printf("Error: Failed to add an entity to the level '%s'. No more space available.\n", level->name);
+    exit(1);
+}
+
+/**
+ * Remove an entity from the level
+ * @note You have to free the space of the entity by your own
+ * @param level
+ * @param entity
+ */
+void level_remove_entity(Level *level, Entity *entity) {
+    for (int i = 0; i < LEVEL_ENTITY_COUNT; i++) {
+        if(level->entities[i] == entity) {
+            level->entities[i] = NULL;
+            return;
+        }
+    }
+
+    printf("Error: Failed to remove an entity from the level '%s'. Entity not found.\n", level->name);
+    exit(1);
+}
+
+/**
+ * Render the level to the screen
+ * @param renderer
+ * @param level
+ */
 void level_render(SDL_Renderer *renderer, Level *level) {
     sprite_render(renderer, level->background, 0, 0);
 
     for (int i = 0; i < LEVEL_TILE_COUNT; i++) {
-        if (level->tileFree[i] == 0) {
+        if (level->tiles[i] != NULL) {
             tile_render(renderer, level->tiles[i]);
+        }
+    }
+
+    for (int i = 0; i < LEVEL_ENTITY_COUNT; i++) {
+        if (level->entities[i] != NULL) {
+            entity_render(renderer, level->entities[i]);
         }
     }
 }

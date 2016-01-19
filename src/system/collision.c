@@ -62,15 +62,19 @@ bool collision_check_level(Level *level, SDL_Rect *rect) {
  * @param tileFree Indicates if a tile exists at the given position
  * @param rect The rect to check
  */
-bool collision_check_entities(Entities *entities, SDL_Rect *rect) {
-    for(int i = 0; i < ENTITY_COUNT; i++) {
-        if ((entities->component_mask[i] & CMP_COLLISION) == CMP_COLLISION) {
-            Collision *collision = &entities->collisions[i];
+bool collision_check_entities(Entity *entities[], SDL_Rect *rect) {
+    for(int i = 0; i < LEVEL_ENTITY_COUNT; i++) {
+        if (entities[i] != NULL) {
+            Entity *entity = entities[i];
 
-            if (collision->bounds->x != rect->x &&
-                collision->bounds->y != rect->y &&
-                collision_check(entities->collisions[i].bounds, rect)) {
-                return true;
+            if ((entity->component_mask & CMP_COLLISION) != 0) {
+                Collision *collision = &entity->collision;
+
+                if (collision->bounds->x != rect->x &&
+                    collision->bounds->y != rect->y &&
+                    collision_check(collision->bounds, rect)) {
+                    return true;
+                }
             }
         }
     }
@@ -84,9 +88,9 @@ bool collision_check_entities(Entities *entities, SDL_Rect *rect) {
  * @param tileFree Indicates if a tile exists at the given position
  * @param rect The rect to check
  */
-bool collision_check_tiles(Tile *tiles[], int *tileFree, SDL_Rect *rect) {
+bool collision_check_tiles(Tile *tiles[], SDL_Rect *rect) {
     for(int i = 0; i < LEVEL_TILE_COUNT; i++) {
-        if (tileFree[i] == 0 && collision_check(tiles[i]->bounds, rect)) {
+        if (tiles[i] != NULL && collision_check(tiles[i]->bounds, rect)) {
             return true;
         }
     }

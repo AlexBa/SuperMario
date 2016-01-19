@@ -1,3 +1,6 @@
+#ifndef SUPERMARIO_SYSTEM_H
+#define SUPERMARIO_SYSTEM_H
+
 #include <stdio.h>
 #include "../entity/entity.h"
 #include "../component/component.h"
@@ -6,13 +9,13 @@
 #include "../game/level.h"
 #include "../entity/entity.h"
 
-#ifndef SUPERMARIO_SYSTEM_H
-#define SUPERMARIO_SYSTEM_H
+// Constants
+#define SYSTEM_GRAVITY_FACTOR 35
 
-void sys_input_update(Level *level, Entities *entities, const Uint8 *key, float delta);
-void sys_render_update(Entities *entities, SDL_Renderer *renderer);
-void sys_gravitation_update(Level *level, Entities *entities, float delta);
-void sys_straight_movement_update(Level *level, Entities *entities, float delta);
-void sys_collision_update(Level *level, Entities *entities);
+// Methods
+void system_input_update(Entity *entity, const Uint8 *key, float delta);
+void system_gravitation_update(Entity *entity, float delta);
+void system_straight_movement_update(Entity *entity, float delta);
+void system_collision_update(Entity *entity, Level *level);
 
-#endif //SUPERMARIO_SYSTEM_H
+#endif

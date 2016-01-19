@@ -1,158 +1,132 @@
 #include "system.h"
 
-#define SYSTEM_GRAVITY_FACTOR 35
+/**
+ * Update the collision logic
+ * @param entity The next entity to update
+ * @param delta The elapsed time
+ */
+void system_collision_update(Entity *entity, Level *level) {
+	if((entity->component_mask & CMP_POSITION) == CMP_POSITION &&
+	   (entity->component_mask & CMP_COLLISION) == CMP_COLLISION) {
 
-void sys_render_update(Entities *entities, SDL_Renderer *renderer)
-{
-	//UI/HUD elements defined as render components without position
-	//Object sprites defined as render components + position
+		// Get the current position and collision bounds of the entity
+		Position *position = &entity->position;
+		Collision *collision = &entity->collision;
 
-	unsigned int entity;
-	//struct cmp_position *pos;
-	//struct cmp_position *render;
+		// Apply the current position to the collision bounds
+		collision->bounds->x = (int) position->x;
 
-	for(entity = 0; entity < ENTITY_COUNT; ++entity)
-	{
-		if((entities->component_mask[entity] & CMP_RENDER) == CMP_RENDER)
-		{
-			//TODO: use get_sprite here with the graphic database and draw it with SDL_RenderCopy()
+		// Check the collision
+		if (collision_check_tiles(level->tiles, collision->bounds) ||
+			collision_check_entities(level->entities, collision->bounds)) {
+			position->x = position->oldX;
+			collision->bounds->x = (int) position->oldX;
 
-			Sprite *sprite = sprite_get(entities->renders[entity].name);
-
-			//fill out position rect if it contains a position component, otherwise use defaults.
-			int w, h;
-			SDL_Rect pos_rect;
-			pos_rect.x = 0;
-			pos_rect.y = 0;
-			if((entities->component_mask[entity] & CMP_POSITION) == CMP_POSITION)
-			{
-				pos_rect.x = entities->positions[entity].x;
-				pos_rect.y = entities->positions[entity].y;
+			if((entity->component_mask & CMP_STRAIGHT_MOVEMENT) == CMP_STRAIGHT_MOVEMENT) {
+				if (strcmp(entity->straightMovement.direction, "left") == 0) {
+					entity->straightMovement.direction = "right";
+				} else {
+					entity->straightMovement.direction = "left";
+				}
 			}
-			SDL_QueryTexture(sprite->texture, NULL, NULL, &w, &h);
-			pos_rect.w = w;
-			pos_rect.h = h;
-			SDL_RenderCopy(renderer, sprite->texture, NULL, &pos_rect);
 		}
+
+		// Set the old position for the next time
+		position->oldX = position->x;
+
+		// --------------------------------------
+
+		// Apply the current position to the collision bounds
+		collision->bounds->y = (int) position->y;
+
+		// Check the collision
+		if (collision_check_tiles(level->tiles, collision->bounds) ||
+			collision_check_entities(level->entities, collision->bounds)) {
+
+			if((entity->component_mask & CMP_JUMP) == CMP_JUMP && entity->jump.active == true) {
+				if (position->y > position->oldY) {
+					entity->jump.active = false;
+				}
+
+				entity->jump.currentForce = 0;
+			}
+
+			position->y = position->oldY;
+			collision->bounds->y = (int) position->oldY;
+		}
+
+		// Set the old position for the next time
+		position->oldY = position->y;
 	}
 }
 
-void sys_collision_update(Level *level, Entities *entities) {
-	for(int entity = 0; entity < ENTITY_COUNT; ++entity) {
-		if((entities->component_mask[entity] & CMP_POSITION) == CMP_POSITION &&
-		   (entities->component_mask[entity] & CMP_COLLISION) == CMP_COLLISION) {
+/**
+ * Update the input logic
+ * @param entity The next entity to update
+ * @param delta The elapsed time
+ */
+void system_input_update(Entity *entity, const Uint8 *key, float delta) {
+	if((entity->component_mask & CMP_POSITION) == CMP_POSITION &&
+	   (entity->component_mask & CMP_VELOCITY) == CMP_VELOCITY &&
+	   (entity->component_mask & CMP_COLLISION) == CMP_COLLISION) {
 
-			// Get the current position and collision bounds of the entity
-			Position *position = &entities->positions[entity];
-			Collision *collision = &entities->collisions[entity];
-
-			// Apply the current position to the collision bounds
-			collision->bounds->x = (int) position->x;
-
-			// Check the collision
-			if (collision_check_tiles(level->tiles, level->tileFree, collision->bounds) ||
-				collision_check_entities(entities, collision->bounds)) {
-				position->x = position->oldX;
-				collision->bounds->x = (int) position->oldX;
-
-				if((entities->component_mask[entity] & CMP_STRAIGHT_MOVEMENT) == CMP_STRAIGHT_MOVEMENT) {
-					if (strcmp(entities->straightMovements[entity].direction, "left") == 0) {
-						entities->straightMovements[entity].direction = "right";
-					} else {
-						entities->straightMovements[entity].direction = "left";
-					}
-				}
+		if ((entity->component_mask & CMP_JUMP) == CMP_JUMP) {
+			if (key[SDL_SCANCODE_UP] && entity->jump.active == false) {
+				entity->jump.active = true;
+				entity->jump.currentForce = entity->jump.initialForce;
 			}
 
-			// Set the old position for the next time
-			position->oldX = position->x;
-
-			// --------------------------------------
-
-			// Apply the current position to the collision bounds
-			collision->bounds->y = (int) position->y;
-
-			// Check the collision
-			if (collision_check_tiles(level->tiles, level->tileFree, collision->bounds) ||
-				collision_check_entities(entities, collision->bounds)) {
-
-				if((entities->component_mask[entity] & CMP_JUMP) == CMP_JUMP && entities->jumps[entity].active == true) {
-					if (position->y > position->oldY) {
-						entities->jumps[entity].active = false;
-					}
-
-					entities->jumps[entity].currentForce = 0;
-				}
-
-				position->y = position->oldY;
-				collision->bounds->y = (int) position->oldY;
+			if (entity->jump.active) {
+				entity->position.y -= entity->jump.currentForce * delta * 1.2 ;
 			}
-
-			// Set the old position for the next time
-			position->oldY = position->y;
 		}
-	}
-}
 
-void sys_input_update(Level *level, Entities *entities, const Uint8 *key, float delta) {
-	for(int entity = 0; entity < ENTITY_COUNT; ++entity) {
-		if((entities->component_mask[entity] & CMP_POSITION) == CMP_POSITION &&
-		   (entities->component_mask[entity] & CMP_VELOCITY) == CMP_VELOCITY &&
-		   (entities->component_mask[entity] & CMP_COLLISION) == CMP_COLLISION) {
-
-			if ((entities->component_mask[entity] & CMP_JUMP) == CMP_JUMP) {
-				if (key[SDL_SCANCODE_UP] && entities->jumps[entity].active == false) {
-					entities->jumps[entity].active = true;
-					entities->jumps[entity].currentForce = entities->jumps[entity].initialForce;
-				}
-
-				if (entities->jumps[entity].active) {
-					entities->positions[entity].y -= entities->jumps[entity].currentForce * delta * 1.2 ;
-				}
+		if ((entity->component_mask & CMP_INPUT_PLAYER) == CMP_INPUT_PLAYER ) {
+			if (key[SDL_SCANCODE_LEFT]) {
+				entity->position.x -= entity->velocity.x * delta;
 			}
-
-			if ((entities->component_mask[entity] & CMP_INPUT_PLAYER) == CMP_INPUT_PLAYER ) {
-				if (key[SDL_SCANCODE_LEFT]) {
-					entities->positions[entity].x -= entities->velocities[entity].x * delta;
-				}
-				if (key[SDL_SCANCODE_RIGHT]) {
-					entities->positions[entity].x += entities->velocities[entity].x * delta;
-				}
+			if (key[SDL_SCANCODE_RIGHT]) {
+				entity->position.x += entity->velocity.x * delta;
 			}
 		}
 	}
 }
 
-void sys_gravitation_update(Level *level, Entities *entities, float delta) {
-	for(unsigned int entity = 0; entity < ENTITY_COUNT; ++entity) {
-		if((entities->component_mask[entity] & CMP_POSITION) == CMP_POSITION &&
-		   (entities->component_mask[entity] & CMP_VELOCITY) == CMP_VELOCITY &&
-		   (entities->component_mask[entity] & CMP_COLLISION) == CMP_COLLISION &&
-		   (entities->component_mask[entity] & CMP_GRAVITATION) == CMP_GRAVITATION ) {
+/**
+ * Update the gravitation logic
+ * @param entity The next entity to update
+ * @param delta The elapsed time
+ */
+void system_gravitation_update(Entity *entity, float delta) {
+	if((entity->component_mask & CMP_POSITION) == CMP_POSITION &&
+	   (entity->component_mask & CMP_VELOCITY) == CMP_VELOCITY &&
+	   (entity->component_mask & CMP_COLLISION) == CMP_COLLISION &&
+	   (entity->component_mask & CMP_GRAVITATION) == CMP_GRAVITATION ) {
 
-			entities->positions[entity].y += 0.5 * SYSTEM_GRAVITY_FACTOR * 9.81 * delta;
+		entity->position.y += 0.5 * SYSTEM_GRAVITY_FACTOR * 9.81 * delta;
 
-			if ((entities->component_mask[entity] & CMP_JUMP) == CMP_JUMP) {
-				if (entities->jumps[entity].active) {
-					entities->jumps[entity].currentForce -= 0.5 * SYSTEM_GRAVITY_FACTOR * 9.81 * delta * 1.5;
-				}
+		if ((entity->component_mask & CMP_JUMP) == CMP_JUMP) {
+			if (entity->jump.active) {
+				entity->jump.currentForce -= 0.5 * SYSTEM_GRAVITY_FACTOR * 9.81 * delta * 1.5;
 			}
 		}
 	}
 }
 
-void sys_straight_movement_update(Level *level, Entities *entities, float delta) {
-	for(unsigned int entity = 0; entity < ENTITY_COUNT; ++entity)
-	{
-		if((entities->component_mask[entity] & CMP_POSITION) == CMP_POSITION &&
-		   (entities->component_mask[entity] & CMP_VELOCITY) == CMP_VELOCITY &&
-		   (entities->component_mask[entity] & CMP_STRAIGHT_MOVEMENT) == CMP_STRAIGHT_MOVEMENT) {
+/**
+ * Update the straight movement logic
+ * @param entity The next entity to update
+ * @param delta The elapsed time
+ */
+void system_straight_movement_update(Entity *entity,  float delta) {
+	if((entity->component_mask & CMP_POSITION) == CMP_POSITION &&
+	   (entity->component_mask & CMP_VELOCITY) == CMP_VELOCITY &&
+	   (entity->component_mask & CMP_STRAIGHT_MOVEMENT) == CMP_STRAIGHT_MOVEMENT) {
 
-			if (strcmp(entities->straightMovements[entity].direction, "left") == 0) {
-				entities->positions[entity].x -= entities->velocities[entity].x * delta;
-			} else {
-				entities->positions[entity].x += entities->velocities[entity].x * delta;
-			}
+		if (strcmp(entity->straightMovement.direction, "left") == 0) {
+			entity->position.x -= entity->velocity.x * delta;
+		} else {
+			entity->position.x += entity->velocity.x * delta;
 		}
 	}
 }

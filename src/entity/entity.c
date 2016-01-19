@@ -1,21 +1,27 @@
 #include "entity.h"
 
-unsigned int entity_create(Entities *entities)
-{
-    unsigned int entity;
-    for(entity = 0; entity < ENTITY_COUNT; ++entity)
-    {
-        if(entities->component_mask[entity] == CMP_NONE)
-        {
-            return entity;
-        }
-    }
-
-    printf("Error: no more entities.\n");
-    return ENTITY_COUNT;
+/**
+ * Create a new entity
+ */
+Entity* entity_create() {
+    return malloc(sizeof(Entity));
 }
 
-void entity_destroy(Entities *entities, unsigned int entity)
-{
-    entities->component_mask[entity] = CMP_NONE;
+/**
+ * Deletes an existing entity
+ * @param entity
+ */
+void entity_delete(Entity *entity) {
+    free(entity);
+}
+
+/**
+ * Render an existing entity
+ * @param renderer
+ * @param entity
+ */
+void entity_render(SDL_Renderer *renderer, Entity *entity) {
+    if((entity->component_mask & CMP_POSITION) != 0 && (entity->component_mask & CMP_RENDER) != 0) {
+        sprite_render(renderer, sprite_get(entity->render.name), (int) entity->position.x, (int) entity->position.y);
+    }
 }

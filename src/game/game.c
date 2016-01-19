@@ -38,10 +38,15 @@ void game_run(Game *game) {
     //TODO: Example code. Remove it later
     game->level = level_create(game->renderer, "player.bmp");
 
-    unsigned int player_id = player_create(&entities, 64.0f, 64.0f);
-    unsigned int enemy_id = enemy_create(&entities, 560.0f, 64.0f);
-    game->last_ticks = SDL_GetTicks();
+    // Create the player
+    Entity *player = player_create(64.0f, 240.0f);
+    level_add_entity(game->level, player);
 
+    // Create the enemy
+    Entity *enemy = enemy_create(90.0f, 240.0f);
+    level_add_entity(game->level, enemy);
+
+    game->last_ticks = SDL_GetTicks();
     game_continue(game);
 
     int done = 0;
@@ -77,8 +82,6 @@ void game_run(Game *game) {
     }
 
     level_delete(game->level);
-    entity_destroy(&entities, player_id);
-    entity_destroy(&entities, enemy_id);
 }
 
 /**
@@ -101,10 +104,14 @@ void game_pause(Game *game) {
  * @param delta The elapsed time since the last run
  */
 void game_update(Game *game, float delta) {
-    sys_input_update(game->level, &entities, game->key, delta);
-    sys_straight_movement_update(game->level, &entities, delta);
-    sys_gravitation_update(game->level, &entities, delta);
-    sys_collision_update(game->level, &entities);
+    for(int i = 0; i < LEVEL_ENTITY_COUNT; i++) {
+        if (game->level->entities[i] != NULL) {
+            system_input_update(game->level->entities[i], game->key, delta);
+            system_straight_movement_update(game->level->entities[i], delta);
+            system_gravitation_update(game->level->entities[i], delta);
+            system_collision_update(game->level->entities[i], game->level);
+        }
+    }
 }
 
 /**
@@ -114,9 +121,6 @@ void game_update(Game *game, float delta) {
  */
 void game_render(Game *game, float delta) {
     SDL_RenderClear(game->renderer);
-
     level_render(game->renderer, game->level);
-    sys_render_update(&entities, game->renderer);
-
     SDL_RenderPresent(game->renderer);
 }

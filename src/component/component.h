@@ -1,12 +1,13 @@
-#include <stdio.h>
-#include <stdbool.h>
-#include <SDL2/SDL_rect.h>
-
 #ifndef SUPERMARIO_COMPONENT_H
 #define SUPERMARIO_COMPONENT_H
 
+#include <stdio.h>
+#include <stdbool.h>
+#include <SDL2/SDL_rect.h>
+#include "../graphic/sprite.h"
+
 typedef struct cmp_render_t {
-    const char* name;
+    const char *name;
 } Render;
 
 typedef struct cmp_position_t {
