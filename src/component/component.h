@@ -57,6 +57,16 @@ typedef struct cmp_deadly {
     bool isDead;
 } Deadly;
 
+typedef struct cmp_player {
+    bool alive;
+    bool vulnerable;
+} Player;
+
+typedef struct cmp_enemy {
+    bool alive;
+    bool vulnerable;
+} Enemy;
+
 enum component {
     CMP_NONE = 0,
     CMP_RENDER = 1 << 0,
@@ -70,7 +80,9 @@ enum component {
     CMP_CHECK_POINT = 1 << 8,
     CMP_ITEM = 1 << 9,
     CMP_HEALTH = 1 << 10,
-    CMP_DEADLY = 1 << 11
+    CMP_DEADLY = 1 << 11,
+    CMP_PLAYER = 1 << 12,
+    CMP_ENEMY = 1 << 13
 };
 
 #endif //SUPERMARIO_COMPONENT_H

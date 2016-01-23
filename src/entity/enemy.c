@@ -8,7 +8,7 @@
 Entity* enemy_create(float x, float y) {
     Entity* enemy = entity_create();
     enemy->component_mask = CMP_POSITION | CMP_VELOCITY | CMP_COLLISION | CMP_RENDER |
-                            CMP_GRAVITATION | CMP_STRAIGHT_MOVEMENT;
+                            CMP_GRAVITATION | CMP_STRAIGHT_MOVEMENT | CMP_DEADLY | CMP_HEALTH | CMP_ENEMY ;
     enemy->position.x = x;
     enemy->position.y = y;
     enemy->position.oldX = x;
@@ -22,6 +22,9 @@ Entity* enemy_create(float x, float y) {
     enemy->collision.bounds->h = 32;
     enemy->straightMovement.direction = "left";
     enemy->render.name = "gumba.bmp";
-
+    enemy->deadly.isDead = false;
+    enemy->health.counter = 1;
+    enemy->enemy.alive = true;
+    enemy->enemy.vulnerable = true;
     return enemy;
 }

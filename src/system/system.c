@@ -80,7 +80,6 @@ void system_health_update(Entity *entity, Level *level) {
 				game->running = false;
 				return;
 			}
-
 			entity->position.x = entity->check_point.x;
 			entity->position.y = entity->check_point.y;
 		}
