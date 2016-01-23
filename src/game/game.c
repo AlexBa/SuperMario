@@ -44,7 +44,7 @@ void game_run(Game *game) {
     level_add_entity(game->level, player);
 
     // Create the enemy
-    Entity *enemy = enemy_create(300.0f, 60.0f);
+    Entity *enemy = pyro_create(300.0f, 60.0f);
     level_add_entity(game->level, enemy);
 
     // Create the enemy
@@ -116,7 +116,9 @@ void game_update(Game *game, float delta) {
             system_gravitation_update(game->level->entities[i], delta);
             system_health_update(game->level->entities[i], game->level);
             system_deadly_update(game->level->entities[i], game->level);
+            system_bullet_update(game->level->entities[i], game->level);
             system_collision_update(game->level->entities[i], game->level);
+            system_shooting_update(game->level->entities[i], game->level, delta);
         }
     }
 }

@@ -9,8 +9,7 @@
 #include "../graphic/sprite.h"
 #include "../game/level.h"
 #include "../entity/entity.h"
-
-
+#include "../entity/fireball.h"
 
 // Constants
 #define SYSTEM_GRAVITY_FACTOR 35
@@ -22,5 +21,7 @@ void system_straight_movement_update(Entity *entity, float delta);
 void system_health_update(Entity *entity, Level *level);
 void system_collision_update(Entity *entity, Level *level);
 void system_deadly_update(Entity *entity, Level *level);
+void system_shooting_update(Entity *entity, Level *level, float delta);
+void system_bullet_update(Entity *entity, Level *level);
 
 #endif
