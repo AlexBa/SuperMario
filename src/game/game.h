@@ -5,12 +5,14 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <SDL2/SDL.h>
+#include "../component/component.h"
 #include "../entity/entity.h"
 #include "../entity/player.h"
 #include "../entity/mushroom.h"
 #include "../entity/enemy.h"
 #include "../system/system.h"
 #include "level.h"
+
 
 // Object
 typedef struct game_t {
@@ -32,5 +34,6 @@ void game_continue(Game *game);
 void game_pause(Game *game);
 void game_update(Game *game, float delta);
 void game_render(Game *game, float delta);
+void game_scroll(Game *game);
 
 #endif //SUPERMARIO_GAME_H
