@@ -19,7 +19,6 @@ typedef struct entity_t {
     Item item;
     Health health;
     Deadly deadly;
-    Player player;
 } Entity;
 
 // Methods
