@@ -11,7 +11,7 @@ Game* game_create() {
     game->pause = false;
     game->running = false;
 
-    SDL_CreateWindowAndRenderer(0, 0, SDL_WINDOW_MAXIMIZED, &game->window, &game->renderer);
+    SDL_CreateWindowAndRenderer(WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_INPUT_GRABBED, &game->window, &game->renderer);
     if (game->window == NULL || game->renderer == NULL) {
         printf("ERROR: Failed to create the game: %s", SDL_GetError());
         return NULL;
@@ -38,7 +38,7 @@ void game_delete(Game *game) {
 void game_run(Game *game) {
     //TODO: Example code. Remove it later
     game->level = level_create(game->renderer, "back.bmp");
-
+    /*
     // Create the player
     Entity *player = player_create(64.0f, 240.0f);
     level_add_entity(game->level, player);
@@ -50,7 +50,7 @@ void game_run(Game *game) {
     // Create the enemy
     Entity *mushroom = mushroom_create(400.0f, 60.0f);
     level_add_entity(game->level, mushroom);
-
+    */
     game->last_ticks = SDL_GetTicks();
     game_continue(game);
 
@@ -126,8 +126,52 @@ void game_update(Game *game, float delta) {
  * @param game The game to render
  * @param delta The elapsed time since the last run
  */
+
 void game_render(Game *game, float delta) {
+    game_scroll(game);
     SDL_RenderClear(game->renderer);
     level_render(game->renderer, game->level);
     SDL_RenderPresent(game->renderer);
+}
+
+void game_scroll(Game *game) {
+    for (int i = 0; i < LEVEL_ENTITY_COUNT; i++) {
+        Entity *entity = game->level->entities[i];
+        if (entity != NULL &&
+           (entity->component_mask & CMP_PLAYER) != 0 &&
+           (entity->component_mask & CMP_POSITION) != 0) {
+
+            //Camera
+            SDL_Rect camera;
+            camera.x = (entity->position.x) - WINDOW_WIDTH/2;
+            camera.y = (entity->position.y) - WINDOW_HEIGHT/2;
+            camera.w = WINDOW_WIDTH;
+            camera.h = WINDOW_HEIGHT;
+
+            //if the camera is out of bounds
+            if (camera.x < 0) {
+                camera.x = 0;
+            }
+            if (camera.y < 0) {
+                camera.y = 0;
+            }
+            if( camera.x > WINDOW_WIDTH - camera.w ) {
+                camera.x = WINDOW_WIDTH - camera.w;
+            }
+            if( camera.y > WINDOW_HEIGHT - camera.h ) {
+                camera.y = WINDOW_HEIGHT - camera.h;
+            }
+
+            //position and size that is to be seen in the window
+            SDL_Rect postitionCam;
+            postitionCam.x = 0;
+            postitionCam.y = 0;
+
+            SDL_GetRendererOutputSize(game->renderer, &postitionCam.w, &postitionCam.h);
+
+            //Draw the extract to the screen
+            SDL_RenderCopy(game->renderer, game->level->background->texture, &camera, &postitionCam);
+        }
+    }
+    return;
 }

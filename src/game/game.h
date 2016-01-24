@@ -32,5 +32,6 @@ void game_continue(Game *game);
 void game_pause(Game *game);
 void game_update(Game *game, float delta);
 void game_render(Game *game, float delta);
+void game_scroll(Game *game);
 
 #endif //SUPERMARIO_GAME_H

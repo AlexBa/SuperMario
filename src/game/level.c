@@ -26,24 +26,36 @@ Level* level_create(SDL_Renderer *renderer, const char *name) {
                                               "|                       |",
                                               "|                       |",
                                               "|         c             |",
-                                              "|        cc c           |",
-                                              "|      c cc c       c   |",
-                                              "|     c  cc  c    c     |",
+                                              "|P       c  c           |",
+                                              "|cccc  c c  c       c   |",
+                                              "|     c Ecc  c    c     |",
                                               "|       cc c  c   c     |",
-                                              "|      c        c       |",
+                                              "|      c      M c       |",
                                               "______________________ __",};
 
     for (int i = 0; i < LEVEL_HEIGHT; i++) {
         for (int j = 0; j < LEVEL_WIDTH; j++) {
-            if (field[i][j] == '_') {
+            if (field[i][j] == '_') {         //Normal Tile
                 Tile *tile = tile_create(renderer, "brick.bmp", TILE_BLOCK, (j * TILE_WIDTH), (i * TILE_HEIGHT));
                 level_add_tile(level, tile);
-            } else if (field [i][j] == '|') {
+            } else if (field [i][j] == '|') { //Normal Tile
                 Tile *tile = tile_create(renderer, "brick.bmp", TILE_BLOCK, (j * TILE_WIDTH), (i * TILE_HEIGHT));
                 level_add_tile(level, tile);
-            } else if (field [i][j] == 'c') {
+            } else if (field [i][j] == 'c') { //Normal Tile
                 Tile *tile = tile_create(renderer, "brick.bmp", TILE_BLOCK, (j * TILE_WIDTH), (i * TILE_HEIGHT));
                 level_add_tile(level, tile);
+            } else if (field [i][j] == 'P') { //Player
+                Entity *player = player_create((j * TILE_WIDTH), (i * TILE_HEIGHT));
+                level_add_entity(level, player);
+                player->check_point.x = (j * TILE_WIDTH);
+                player->check_point.y = (i * TILE_HEIGHT);
+            } else if (field [i][j] == 'E') { //Enemy
+                Entity *enemy = enemy_create((j * TILE_WIDTH), (i * TILE_HEIGHT));
+                level_add_entity(level, enemy);
+            } else if (field [i][j] == 'M') { //Mushroom
+                Entity *mushroom = mushroom_create((j * TILE_WIDTH), (i * TILE_HEIGHT));
+                level_add_entity(level, mushroom);
+
             }
         }
     }
