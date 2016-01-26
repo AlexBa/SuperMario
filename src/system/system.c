@@ -247,14 +247,6 @@ void system_shooting_update(Entity *entity, Level *level, float delta) {
 				entity->shooting.ready = true;
 			}
 
-<<<<<<< HEAD
-			if(strcmp(entity->shooting.bulletType, "fireball") == 0 && strcmp(entity->shooting.direction, "left") == 0 ) {
-				Entity *fireball = fireball_create(entity->position.x - entity->shooting.bulletSize, entity->position.y, "left");
-				level_add_entity(level, fireball);
-			} else if (strcmp(entity->shooting.bulletType, "fireball") == 0 && strcmp(entity->shooting.direction, "right") == 0 ) {
-				Entity *fireball = fireball_create(entity->position.x + entity->shooting.bulletSize + TILE_WIDTH, entity->position.y, "right");
-				level_add_entity(level, fireball);
-=======
 			if (entity->shooting.ready == true) {
 				entity->shooting.ready = false;
 
@@ -264,12 +256,14 @@ void system_shooting_update(Entity *entity, Level *level, float delta) {
 					entity->shooting.elapsed -= entity->shooting.rate;
 				}
 
-				if (strcmp(entity->shooting.bulletType, "fireball") == 0) {
-					Entity *fireball = fireball_create(entity->position.x - entity->shooting.bulletSize,
-													   entity->position.y, "left");
+				if(strcmp(entity->shooting.bulletType, "fireball") == 0 && strcmp(entity->shooting.direction, "left") == 0 ) {
+					Entity *fireball = fireball_create(entity->position.x - entity->shooting.bulletSize, entity->position.y, "left");
+					level_add_entity(level, fireball);
+				} else if (strcmp(entity->shooting.bulletType, "fireball") == 0 && strcmp(entity->shooting.direction, "right") == 0 ) {
+					Entity *fireball = fireball_create(entity->position.x + entity->shooting.bulletSize + TILE_WIDTH,
+													   entity->position.y, "right");
 					level_add_entity(level, fireball);
 				}
->>>>>>> feature/items
 			}
 		}
 	}
