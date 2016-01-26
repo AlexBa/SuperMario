@@ -37,7 +37,7 @@ Level* level_create(SDL_Renderer *renderer, const char *name) {
          "|       cc c  c   c     |                        |",
          "|      c      M c       |c c  c  c   c  cc  c  c |",
          "|_____________________ _|                     c  |",
-         "|        c             c|  c  c  c  cc   c c c   |",
+         "|        cF            c|  c  c  c  cc   c c c   |",
          "|  ccccc  cccc  cc   c c|c                       |",
          "|  cR         c   cc c c| cR       c         c   |",
          "|   c    c c     c   E  |  c       LcEEE    c    |",
@@ -73,9 +73,9 @@ Level* level_create(SDL_Renderer *renderer, const char *name) {
             } else if (field [i][j] == 'R') { //Pyro Right Shooting
                 Entity *pyro = pyro_create((j * TILE_WIDTH), (i * TILE_HEIGHT), "right");
                 level_add_entity(level, pyro);
-            } else if (field [i][j] == 'M') { //Mushroom
-                Entity *mushroom = mushroom_create((j * TILE_WIDTH), (i * TILE_HEIGHT));
-                level_add_entity(level, mushroom);
+            } else if (field [i][j] == 'F') { //Mushroom
+                Entity *fireflower = fireflower_create((j * TILE_WIDTH), (i * TILE_HEIGHT));
+                level_add_entity(level, fireflower);
             }
         }
     }
