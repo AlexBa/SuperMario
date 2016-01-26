@@ -23,16 +23,16 @@ Level* level_create(SDL_Renderer *renderer, const char *name) {
         level->entities[i] = NULL;
     }
 
-    char field [LEVEL_HEIGHT][LEVEL_WIDTH] = {"_________________________",
-                                              "|                       |",
-                                              "|             o    o    |",
-                                              "|         c             |",
-                                              "|        cc c           |",
-                                              "|      c cc c       c   |",
-                                              "|     c  cc  c    c     |",
-                                              "|       cc c  c   c     |",
-                                              "|      c        c       |",
-                                              "______________________ __",};
+    char field [LEVEL_HEIGHT][LEVEL_WIDTH] = {"________________________________________________________________________ ",
+                                              "|                                                                       |",
+                                              "|             o    o                                                    |",
+                                              "|         c                                                             |",
+                                              "|        cc c                                                           |",
+                                              "|      c cc c       c                                             c     |",
+                                              "|     c  cc  c    c                                              ccc    |",
+                                              "|       cc c  c   c                                             ccccc   |",
+                                              "|                                                              ccccccc  |",
+                                              "______________________ _______________________   ___________ ___________ ",};
 
     for (int i = 0; i < LEVEL_HEIGHT; i++) {
         for (int j = 0; j < LEVEL_WIDTH; j++) {
