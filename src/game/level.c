@@ -196,7 +196,7 @@ void level_scroll(Level *level) {
             if(level->camera.y < 0) {
                 level->camera.y = 0;
             }
-            
+
             if(level->camera.x >  160 + ((LEVEL_TILE_WIDTH-50)*TILE_WIDTH)) {
                 level->camera.x =  160 + ((LEVEL_TILE_WIDTH-50)*TILE_WIDTH);
             }
@@ -215,7 +215,6 @@ void level_scroll(Level *level) {
  */
 void level_render(SDL_Renderer *renderer, Level *level) {
     sprite_render(renderer, level->background, 0, 0);
-    printf("Level: %d\n",level->camera.y);
     for (int i = 0; i < LEVEL_TILE_COUNT; i++) {
         if (level->tiles[i] != NULL) {
             tile_render(renderer, level->tiles[i], &level->camera);
