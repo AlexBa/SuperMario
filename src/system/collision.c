@@ -88,6 +88,7 @@ bool collision_check_deadly_entities(Entity *entities[], SDL_Rect *rect) {
                 (entity->component_mask & CMP_DEADLY) != 0) {
                 Collision *collision = &entity->collision;
                 Deadly *deadly = &entity->deadly;
+
                 if (collision->bounds != rect &&
                     collision_check(collision->bounds, rect)) {
                     deadly->isDead = true;
@@ -120,18 +121,73 @@ bool collision_check_player_kills_enemy(Entity *entities[], Entity *player) {
     for(int i = 0; i < LEVEL_ENTITY_COUNT; i++) {
         Entity *enemy = entities[i];
 
-        if (enemy != NULL &&
-            enemy != player &&
+        if (enemy != NULL && enemy != player &&
            (enemy->component_mask & CMP_ENEMY) != 0 &&
            (enemy->component_mask & CMP_COLLISION) != 0) {
-                if (collision_check(player->collision.bounds, enemy->collision.bounds)) {
-                    if (player->position.oldY <= player->position.y) {
-                        enemy->enemy.alive = false;
-                        printf("Killed");
-                    }
-                    return true;
+            if (collision_check(player->collision.bounds, enemy->collision.bounds)) {
+                if (player->position.oldY <= player->position.y) {
+                    enemy->enemy.alive = false;
                 }
+                return true;
             }
         }
+    }
+
+    return false;
+}
+
+bool collision_check_enemy_kills_player(Entity *entities[], Entity *enemy) {
+    for(int i = 0; i < LEVEL_ENTITY_COUNT; i++) {
+        Entity *player = entities[i];
+
+        if (player != NULL && player != enemy &&
+            (player->component_mask & CMP_PLAYER) != 0 &&
+            (player->component_mask & CMP_HEALTH) != 0 &&
+            (player->component_mask & CMP_COLLISION) != 0) {
+            if (collision_check(enemy->collision.bounds, player->collision.bounds)) {
+                if (enemy->position.oldX != enemy->position.x) {
+                    player->player.alive = false;
+                }
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+bool collision_check_item_touches_player(Entity *entities[], Entity *item) {
+    for(int i = 0; i < LEVEL_ENTITY_COUNT; i++) {
+        Entity *player = entities[i];
+
+        if (player != NULL && player != item &&
+            (player->component_mask & CMP_PLAYER) != 0 &&
+            (player->component_mask & CMP_COLLISION) != 0) {
+            if (collision_check(item->collision.bounds, player->collision.bounds)) {
+                player->player.touchedItem = item->item.type;
+
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+
+bool collision_check_bullet_kills_enemy(Entity *entities[], Entity *bullet) {
+    for(int i = 0; i < LEVEL_ENTITY_COUNT; i++) {
+        Entity *enemy = entities[i];
+
+        if (enemy != NULL && enemy != bullet &&
+            (enemy->component_mask & CMP_ENEMY) != 0 &&
+            (enemy->component_mask & CMP_COLLISION) != 0) {
+            if (collision_check(bullet->collision.bounds, enemy->collision.bounds)) {
+                enemy->enemy.alive = false;
+                return true;
+            }
+        }
+    }
+
     return false;
 }

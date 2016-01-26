@@ -29,11 +29,11 @@ Level* level_create(SDL_Renderer *renderer, const char *name) {
     char field [LEVEL_TILE_HEIGHT][LEVEL_TILE_WIDTH] =
         {"_________________________",
          "|                       |",
-         "|                       |",
+         "|         E             |",
          "|         c             |",
          "|P       c  c           |",
          "|cccc  c c  c       c   |",
-         "|     c Ecc  c    c     |",
+         "|     c  cc  c    c     |",
          "|       cc c  c   c     |",
          "|      c      M c       |",
          "______________________ __",};

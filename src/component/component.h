@@ -41,7 +41,7 @@ typedef struct cmp_jump_t {
 } Jump;
 
 typedef struct cmp_item_t {
-    const char *type;
+    char *type;
 } Item;
 
 typedef struct cmp_check_point_t {
@@ -58,6 +58,7 @@ typedef struct cmp_deadly {
 } Deadly;
 
 typedef struct cmp_shooting {
+    bool ready;
     const char *bulletType;
     int bulletSize;
     float rate;
@@ -74,6 +75,7 @@ typedef struct cmp_bullet {
 typedef struct cmp_player {
     bool alive;
     bool vulnerable;
+    char *touchedItem;
 } Player;
 
 typedef struct cmp_enemy {

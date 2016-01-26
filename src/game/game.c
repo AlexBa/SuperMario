@@ -114,6 +114,7 @@ void game_update(Game *game, float delta) {
 
     for(int i = 0; i < LEVEL_ENTITY_COUNT; i++) {
         if (game->level->entities[i] != NULL) {
+            system_item_update(game->level->entities[i], game->level, delta);
             system_input_update(game->level->entities[i], game->key, delta);
             system_straight_movement_update(game->level->entities[i], delta);
             system_gravitation_update(game->level->entities[i], delta);

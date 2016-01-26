@@ -7,7 +7,7 @@
  */
 Entity* player_create(float x, float y) {
     Entity *player = entity_create();
-    player->component_mask = CMP_POSITION | CMP_VELOCITY | CMP_COLLISION | CMP_RENDER | CMP_DEADLY |
+    player->component_mask = CMP_POSITION | CMP_VELOCITY | CMP_COLLISION | CMP_RENDER |
                              CMP_INPUT_PLAYER | CMP_GRAVITATION | CMP_JUMP | CMP_CHECK_POINT | CMP_CHECK_POINT | CMP_PLAYER | CMP_HEALTH;
     player->position.x = x;
     player->position.y = y;

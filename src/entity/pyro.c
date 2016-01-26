@@ -3,7 +3,7 @@
 Entity *pyro_create(float x, float y) {
     Entity* pyro = entity_create();
     pyro->component_mask = CMP_POSITION | CMP_VELOCITY | CMP_COLLISION | CMP_RENDER |
-                            CMP_GRAVITATION | CMP_SHOOTING;// | CMP_STRAIGHT_MOVEMENT;
+                            CMP_GRAVITATION | CMP_SHOOTING | CMP_ENEMY;// | CMP_STRAIGHT_MOVEMENT;
     pyro->position.x = x;
     pyro->position.y = y;
     pyro->position.oldX = x;
@@ -15,6 +15,7 @@ Entity *pyro_create(float x, float y) {
     pyro->collision.bounds->y = (int) y;
     pyro->collision.bounds->w = 32;
     pyro->collision.bounds->h = 32;
+    pyro->shooting.ready = false;
     pyro->shooting.bulletType = "fireball";
     pyro->shooting.bulletSize = 5;
     pyro->shooting.direction = "left";
