@@ -37,6 +37,6 @@ void tile_delete(Tile *tile) {
  * @param renderer The renderer we want to draw to
  * @param tile The tile we want to draw
  */
-void tile_render(SDL_Renderer *renderer, Tile *tile) {
-    sprite_render(renderer, tile->sprite, tile->bounds->x, tile->bounds->y);
+void tile_render(SDL_Renderer *renderer, Tile *tile, SDL_Rect *camera) {
+    sprite_render(renderer, tile->sprite, tile->bounds->x - camera->x, tile->bounds->y - camera->y);
 }

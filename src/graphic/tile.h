@@ -24,6 +24,6 @@ enum tile_type {
 // Methods
 Tile* tile_create(SDL_Renderer *renderer, const char* name, int type, int x, int y);
 void tile_delete(Tile *tile);
-void tile_render(SDL_Renderer *renderer, Tile *tile);
+void tile_render(SDL_Renderer *renderer, Tile *tile, SDL_Rect *camera);
 
 #endif //SUPERMARIO_TILE_H

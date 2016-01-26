@@ -11,7 +11,7 @@ Game* game_create() {
     game->pause = false;
     game->running = false;
 
-    SDL_CreateWindowAndRenderer(0, 0, SDL_WINDOW_MAXIMIZED, &game->window, &game->renderer);
+    SDL_CreateWindowAndRenderer(WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_INPUT_GRABBED, &game->window, &game->renderer);
     if (game->window == NULL || game->renderer == NULL) {
         printf("ERROR: Failed to create the game: %s", SDL_GetError());
         return NULL;
@@ -39,6 +39,7 @@ void game_run(Game *game) {
     //TODO: Example code. Remove it later
     game->level = level_create(game->renderer, "back.bmp");
 
+    /*
     // Create the player
     Entity *player = player_create(64.0f, 240.0f);
     level_add_entity(game->level, player);
@@ -50,7 +51,7 @@ void game_run(Game *game) {
     // Create the enemy
     Entity *mushroom = mushroom_create(400.0f, 60.0f);
     level_add_entity(game->level, mushroom);
-
+    */
     game->last_ticks = SDL_GetTicks();
     game_continue(game);
 
@@ -109,6 +110,8 @@ void game_pause(Game *game) {
  * @param delta The elapsed time since the last run
  */
 void game_update(Game *game, float delta) {
+    level_scroll(game->level);
+
     for(int i = 0; i < LEVEL_ENTITY_COUNT; i++) {
         if (game->level->entities[i] != NULL) {
             system_input_update(game->level->entities[i], game->key, delta);
@@ -128,6 +131,7 @@ void game_update(Game *game, float delta) {
  * @param game The game to render
  * @param delta The elapsed time since the last run
  */
+
 void game_render(Game *game, float delta) {
     SDL_RenderClear(game->renderer);
     level_render(game->renderer, game->level);
