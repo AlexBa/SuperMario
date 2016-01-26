@@ -1,4 +1,5 @@
 #include "game.h"
+#include "../entity/coin.h"
 
 /**
  * Create a new game
@@ -50,6 +51,10 @@ void game_run(Game *game) {
     // Create the enemy
     Entity *mushroom = mushroom_create(400.0f, 60.0f);
     level_add_entity(game->level, mushroom);
+
+    // Create coin
+    Entity *coin = coin_create(400.0f, 60.0f);
+    level_add_entity(game->level, coin);
 
     game->last_ticks = SDL_GetTicks();
     game_continue(game);
