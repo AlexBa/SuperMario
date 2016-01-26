@@ -20,8 +20,8 @@ void entity_delete(Entity *entity) {
  * @param renderer
  * @param entity
  */
-void entity_render(SDL_Renderer *renderer, Entity *entity) {
+void entity_render(SDL_Renderer *renderer, Entity *entity, SDL_Rect *camera) {
     if((entity->component_mask & CMP_POSITION) != 0 && (entity->component_mask & CMP_RENDER) != 0) {
-        sprite_render(renderer, sprite_get(renderer, entity->render.name), (int) entity->position.x, (int) entity->position.y);
+        sprite_render(renderer, sprite_get(renderer, entity->render.name), (int) entity->position.x - camera->x, (int) entity->position.y - camera->y);
     }
 }

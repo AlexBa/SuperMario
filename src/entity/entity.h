@@ -24,6 +24,6 @@ typedef struct entity_t {
 // Methods
 Entity* entity_create();
 void entity_delete(Entity *entity);
-void entity_render(SDL_Renderer *renderer, Entity *entity);
+void entity_render(SDL_Renderer *renderer, Entity *entity, SDL_Rect *camera);
 
 #endif
