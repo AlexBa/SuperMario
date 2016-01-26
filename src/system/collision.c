@@ -63,17 +63,17 @@ bool collision_check_level(Level *level, SDL_Rect *rect) {
  */
 bool collision_check_entities(Entity *entities[], SDL_Rect *rect) {
     for(int i = 0; i < LEVEL_ENTITY_COUNT; i++) {
-        if (entities[i] != NULL) {
-            Entity *entity = entities[i];
+                if (entities[i] != NULL) {
+                    Entity *entity = entities[i];
 
-            if ((entity->component_mask & CMP_COLLISION) != 0) {
-                Collision *collision = &entity->collision;
+                    if ((entity->component_mask & CMP_COLLISION) != 0) {
+                        Collision *collision = &entity->collision;
 
-                if (collision->bounds != rect &&
-                    collision_check(collision->bounds, rect)) {
-                    return true;
-                }
-            }
+                        if (collision->bounds != rect &&
+                            collision_check(collision->bounds, rect)) {
+                            return true;
+                        }
+                    }
         }
     }
 
@@ -113,5 +113,25 @@ bool collision_check_tiles(Tile *tiles[], SDL_Rect *rect) {
         }
     }
 
+    return false;
+}
+
+bool collision_check_player_kills_enemy(Entity *entities[], Entity *player) {
+    for(int i = 0; i < LEVEL_ENTITY_COUNT; i++) {
+        Entity *enemy = entities[i];
+
+        if (enemy != NULL &&
+            enemy != player &&
+           (enemy->component_mask & CMP_ENEMY) != 0 &&
+           (enemy->component_mask & CMP_COLLISION) != 0) {
+                if (collision_check(player->collision.bounds, enemy->collision.bounds)) {
+                    if (player->position.oldY <= player->position.y) {
+                        enemy->enemy.alive = false;
+                        printf("Killed");
+                    }
+                    return true;
+                }
+            }
+        }
     return false;
 }

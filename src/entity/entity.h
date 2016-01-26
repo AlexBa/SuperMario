@@ -21,6 +21,8 @@ typedef struct entity_t {
     Deadly deadly;
     Shooting shooting;
     Bullet bullet;
+    Player player;
+    Enemy enemy;
 } Entity;
 
 // Methods

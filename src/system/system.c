@@ -32,7 +32,7 @@ void system_collision_update(Entity *entity, Level *level) {
 				return;
 			}
 
-			if((entity->component_mask & CMP_STRAIGHT_MOVEMENT) != 0) {
+			if((entity->component_mask & CMP_STRAIGHT_MOVEMENT) == CMP_STRAIGHT_MOVEMENT) {
 				if (strcmp(entity->straightMovement.direction, "left") == 0) {
 					entity->straightMovement.direction = "right";
 				} else {
@@ -48,6 +48,10 @@ void system_collision_update(Entity *entity, Level *level) {
 
 		// Apply the current position to the collision bounds
 		collision->bounds->y = (int) position->y;
+
+		if ((entity->component_mask & CMP_PLAYER) != 0) {
+			collision_check_player_kills_enemy(level->entities, entity);
+		}
 
 		// Check the collision
 		if (collision_check_tiles(level->tiles, collision->bounds) ||
@@ -101,7 +105,7 @@ void system_health_update(Entity *entity, Level *level) {
  */
 void system_input_update(Entity *entity, const Uint8 *key, float delta) {
 	if(entity != NULL &&
-		(entity->component_mask & CMP_POSITION) == CMP_POSITION &&
+	   (entity->component_mask & CMP_POSITION) == CMP_POSITION &&
 	   (entity->component_mask & CMP_VELOCITY) == CMP_VELOCITY &&
 	   (entity->component_mask & CMP_JUMP) == CMP_JUMP) {
 		if (entity->jump.active) {
@@ -174,6 +178,14 @@ void system_straight_movement_update(Entity *entity,  float delta) {
 
 void system_deadly_update(Entity *entity, Level *level) {
 	if (entity != NULL &&
+		(entity->component_mask & CMP_ENEMY) != 0) {
+		if (!entity->enemy.alive) {
+			level_remove_entity(level, entity);
+			return;
+		}
+	}
+
+	if (entity != NULL &&
 		(entity->component_mask & CMP_COLLISION) != 0 &&
 		(entity->component_mask & CMP_JUMP) != 0 &&
 		(entity->component_mask & CMP_DEADLY) != 0) {
@@ -183,6 +195,7 @@ void system_deadly_update(Entity *entity, Level *level) {
 				entity->component_mask ^= CMP_COLLISION;
 			}
 		}
+
 }
 
 /**

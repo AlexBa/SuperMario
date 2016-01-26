@@ -44,7 +44,7 @@ void game_run(Game *game) {
     level_add_entity(game->level, player);
 
     // Create the enemy
-    Entity *enemy = pyro_create(300.0f, 60.0f);
+    Entity *enemy = enemy_create(300.0f, 60.0f);
     level_add_entity(game->level, enemy);
 
     // Create the enemy
