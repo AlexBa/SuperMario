@@ -243,7 +243,7 @@ void system_shooting_update(Entity *entity, Level *level, float delta) {
 		// Count the elapsed time for the next shoot
 		entity->shooting.elapsed += delta;
 		if (entity->shooting.elapsed >= entity->shooting.rate) {
-			if ((entity->component_mask & CMP_ENEMY) != 0) {
+			if ((entity->component_mask & CMP_PYRO) != 0) {
 				entity->shooting.ready = true;
 			}
 

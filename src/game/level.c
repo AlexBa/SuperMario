@@ -29,23 +29,23 @@ Level* level_create(SDL_Renderer *renderer, const char *name) {
     char field [LEVEL_TILE_HEIGHT][LEVEL_TILE_WIDTH] =
         {"__________________________________________________",
          "|                       |                        |",
-         "|                       |     ccc   c      c c   |",
+         "|         F             |     ccc   c      c c   |",
          "|         c             |    cccc   c     cc cc  |",
          "|P       c  c           |   ccccc   c    cc   cc |",
-         "|cccc  c c  c       c   |  cccccc   c   cc  E  cc|",
+         "|cccc  c c  c       c   |  ccccccE  c   cc  E  cc|",
          "|     c Ecc  c    c     | _______________________|",
          "|       cc c  c   c     |                        |",
          "|      c      M c       |c c  c  c   c  cc  c  c |",
-         "|_____________________ _|                     c  |",
-         "|        cF            c|  c  c  c  cc   c c c   |",
+         "|_____________________ _|                    Lc  |",
+         "|        c             c|  c  c  c  cc   c c c   |",
          "|  ccccc  cccc  cc   c c|c                       |",
-         "|  cR         c   cc c c| cR       c         c   |",
+         "|  cR         c   cc c c| c        c         c   |",
          "|   c    c c     c   E  |  c       LcEEE    c    |",
          "|_ _____________________|______________________ _|",
-         "|          c            |         L    cR    c  c|",
+         "|          c            |         L    c     c  c|",
          "|c      Lc c   c        |      cccc  c c     Lc  |",
          "| c    Ecc    c  c c   c|    c      c  c  c  c  c|",
-         "|  ccccc  cR                c cc E c c   c     c |",
+         "|  ccccc  c    R            c cc E c c   c     c |",
          "|________________________________________________|",};
 
     for (int i = 0; i < LEVEL_TILE_HEIGHT; i++) {
@@ -73,7 +73,10 @@ Level* level_create(SDL_Renderer *renderer, const char *name) {
             } else if (field [i][j] == 'R') { //Pyro Right Shooting
                 Entity *pyro = pyro_create((j * TILE_WIDTH), (i * TILE_HEIGHT), "right");
                 level_add_entity(level, pyro);
-            } else if (field [i][j] == 'F') { //Mushroom
+            } else if (field [i][j] == 'M') { //Mushroom
+                Entity *mushroom = mushroom_create((j * TILE_WIDTH), (i * TILE_HEIGHT));
+                level_add_entity(level, mushroom);
+            }  else if (field [i][j] == 'F') { //Mushroom
                 Entity *fireflower = fireflower_create((j * TILE_WIDTH), (i * TILE_HEIGHT));
                 level_add_entity(level, fireflower);
             }
