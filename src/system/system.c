@@ -8,7 +8,8 @@ extern Game *game;
  * @param delta The elapsed time
  */
 void system_collision_update(Entity *entity, Level *level) {
-	if((entity->component_mask & CMP_POSITION) == CMP_POSITION &&
+	if(entity != NULL &&
+	   (entity->component_mask & CMP_POSITION) == CMP_POSITION &&
 	   (entity->component_mask & CMP_COLLISION) == CMP_COLLISION) {
 
 		// Get the current position and collision bounds of the entity
@@ -43,6 +44,10 @@ void system_collision_update(Entity *entity, Level *level) {
 		// Apply the current position to the collision bounds
 		collision->bounds->y = (int) position->y;
 
+		if ((entity->component_mask & CMP_PLAYER) != 0) {
+			collision_check_player_kills_enemy(level->entities, entity);
+		}
+
 		// Check the collision
 		if (collision_check_tiles(level->tiles, collision->bounds) ||
 			collision_check_entities(level->entities, collision->bounds)) {
@@ -70,7 +75,8 @@ void system_collision_update(Entity *entity, Level *level) {
  * @param level
  */
 void system_health_update(Entity *entity, Level *level) {
-	if((entity->component_mask & CMP_POSITION) != 0 &&
+	if(entity != NULL &&
+	   (entity->component_mask & CMP_POSITION) != 0 &&
 	   (entity->component_mask & CMP_CHECK_POINT) != 0 &&
 	   (entity->component_mask & CMP_HEALTH) !=0 ) {
 
@@ -92,7 +98,8 @@ void system_health_update(Entity *entity, Level *level) {
  * @param delta The elapsed time
  */
 void system_input_update(Entity *entity, const Uint8 *key, float delta) {
-	if((entity->component_mask & CMP_POSITION) == CMP_POSITION &&
+	if(entity != NULL &&
+	   (entity->component_mask & CMP_POSITION) == CMP_POSITION &&
 	   (entity->component_mask & CMP_VELOCITY) == CMP_VELOCITY &&
 	   (entity->component_mask & CMP_JUMP) == CMP_JUMP) {
 		if (entity->jump.active) {
@@ -100,7 +107,8 @@ void system_input_update(Entity *entity, const Uint8 *key, float delta) {
 		}
 	}
 
-	if((entity->component_mask & CMP_POSITION) == CMP_POSITION &&
+	if(entity != NULL &&
+	   (entity->component_mask & CMP_POSITION) == CMP_POSITION &&
 	   (entity->component_mask & CMP_VELOCITY) == CMP_VELOCITY &&
 	   (entity->component_mask & CMP_COLLISION) == CMP_COLLISION) {
 
@@ -128,7 +136,8 @@ void system_input_update(Entity *entity, const Uint8 *key, float delta) {
  * @param delta The elapsed time
  */
 void system_gravitation_update(Entity *entity, float delta) {
-	if((entity->component_mask & CMP_POSITION) == CMP_POSITION &&
+	if(entity != NULL &&
+	   (entity->component_mask & CMP_POSITION) == CMP_POSITION &&
 	   (entity->component_mask & CMP_VELOCITY) == CMP_VELOCITY &&
 	   (entity->component_mask & CMP_GRAVITATION) == CMP_GRAVITATION ) {
 
@@ -148,7 +157,8 @@ void system_gravitation_update(Entity *entity, float delta) {
  * @param delta The elapsed time
  */
 void system_straight_movement_update(Entity *entity,  float delta) {
-	if((entity->component_mask & CMP_POSITION) == CMP_POSITION &&
+	if(entity != NULL &&
+	   (entity->component_mask & CMP_POSITION) == CMP_POSITION &&
 	   (entity->component_mask & CMP_VELOCITY) == CMP_VELOCITY &&
 	   (entity->component_mask & CMP_STRAIGHT_MOVEMENT) == CMP_STRAIGHT_MOVEMENT) {
 
@@ -161,7 +171,16 @@ void system_straight_movement_update(Entity *entity,  float delta) {
 }
 
 void system_deadly_update(Entity *entity, Level *level) {
-	if ((entity->component_mask & CMP_COLLISION) != 0 &&
+	if (entity != NULL &&
+		(entity->component_mask & CMP_ENEMY) != 0) {
+		if (!entity->enemy.alive) {
+			level_remove_entity(level, entity);
+			return;
+		}
+	}
+
+	if (entity != NULL &&
+		(entity->component_mask & CMP_COLLISION) != 0 &&
 		(entity->component_mask & CMP_JUMP) != 0 &&
 		(entity->component_mask & CMP_DEADLY) != 0) {
 			if (entity->deadly.isDead) {

@@ -116,7 +116,6 @@ bool collision_check_tiles(Tile *tiles[], SDL_Rect *rect) {
     return false;
 }
 
-
 bool collision_check_player_kills_enemy(Entity *entities[], Entity *player) {
     for(int i = 0; i < LEVEL_ENTITY_COUNT; i++) {
         Entity *enemy = entities[i];
@@ -128,6 +127,7 @@ bool collision_check_player_kills_enemy(Entity *entities[], Entity *player) {
                 if (collision_check(player->collision.bounds, enemy->collision.bounds)) {
                     if (player->position.oldY <= player->position.y) {
                         enemy->enemy.alive = false;
+                        printf("Killed");
                     }
                     return true;
                 }
