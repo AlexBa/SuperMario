@@ -1,6 +1,6 @@
 #include "pyro.h"
 
-Entity *pyro_create(float x, float y) {
+Entity *pyro_create(float x, float y, char* direction) {
     Entity* pyro = entity_create();
     pyro->component_mask = CMP_POSITION | CMP_VELOCITY | CMP_COLLISION | CMP_RENDER |
                             CMP_GRAVITATION | CMP_SHOOTING;// | CMP_STRAIGHT_MOVEMENT;
@@ -17,7 +17,7 @@ Entity *pyro_create(float x, float y) {
     pyro->collision.bounds->h = 32;
     pyro->shooting.bulletType = "fireball";
     pyro->shooting.bulletSize = 5;
-    pyro->shooting.direction = "left";
+    pyro->shooting.direction = direction;
     pyro->shooting.rate = 3.0f;
     pyro->shooting.elapsed = 0;
     pyro->shooting.velocityX = 100;

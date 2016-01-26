@@ -5,6 +5,6 @@
 #include "entity.h"
 
 // Methods
-Entity* pyro_create(float x, float y);
+Entity* pyro_create(float x, float y, char* direction);
 
 #endif

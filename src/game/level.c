@@ -30,13 +30,23 @@ Level* level_create(SDL_Renderer *renderer, const char *name) {
         {"_________________________",
          "|                       |",
          "|                       |",
-         "|         c             |",
-         "|P       c  c           |",
+         "|         c R           |",
+         "|P       c  c       L   |",
          "|cccc  c c  c       c   |",
          "|     c Ecc  c    c     |",
          "|       cc c  c   c     |",
          "|      c      M c       |",
-         "______________________ __",};
+         "|_____________________ _|",
+         "|        c             c|",
+         "|  ccccc  cccc  cc   c c|",
+         "|  c          c   cc c c|",
+         "|   c    c c     c   E  |",
+         "|_ _____________________|",
+         "|                       |",
+         "|                       |",
+         "|                       |",
+         "|                       |",
+         "|_____________________ _|",};
 
     for (int i = 0; i < LEVEL_TILE_HEIGHT; i++) {
         for (int j = 0; j < LEVEL_TILE_WIDTH; j++) {
@@ -57,6 +67,12 @@ Level* level_create(SDL_Renderer *renderer, const char *name) {
             } else if (field [i][j] == 'E') { //Enemy
                 Entity *enemy = enemy_create((j * TILE_WIDTH), (i * TILE_HEIGHT));
                 level_add_entity(level, enemy);
+            } else if (field [i][j] == 'L') { //Pyro Left Shooting
+                Entity *pyro = pyro_create((j * TILE_WIDTH), (i * TILE_HEIGHT), "left");
+                level_add_entity(level, pyro);
+            } else if (field [i][j] == 'R') { //Pyro Right Shooting
+                Entity *pyro = pyro_create((j * TILE_WIDTH), (i * TILE_HEIGHT), "right");
+                level_add_entity(level, pyro);
             } else if (field [i][j] == 'M') { //Mushroom
                 Entity *mushroom = mushroom_create((j * TILE_WIDTH), (i * TILE_HEIGHT));
                 level_add_entity(level, mushroom);
