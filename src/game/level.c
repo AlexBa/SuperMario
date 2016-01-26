@@ -30,8 +30,8 @@ Level* level_create(SDL_Renderer *renderer, const char *name) {
         {"_________________________",
          "|                       |",
          "|                       |",
-         "|         c R           |",
-         "|P       c  c       L   |",
+         "|         c             |",
+         "|P       c  c           |",
          "|cccc  c c  c       c   |",
          "|     c Ecc  c    c     |",
          "|       cc c  c   c     |",
@@ -186,8 +186,8 @@ void level_scroll(Level *level) {
             (entity->component_mask & CMP_POSITION) != 0) {
             // Set the camera position
             SDL_Rect *bounds = entity->collision.bounds;
-            level->camera.x = (int)((bounds->x + bounds->w / 2) - SCREEN_WIDTH / 2);
-            level->camera.y = (int)((bounds->y + bounds->h / 2) - SCREEN_HEIGHT / 2);
+            level->camera.x = (int)((bounds->x + bounds->w / 2) - SCREEN_WIDTH);
+            level->camera.y = (int)((bounds->y + bounds->h / 2) - SCREEN_HEIGHT);
 
             //Keep the camera in bounds
             if(level->camera.x < 0) {
@@ -196,12 +196,14 @@ void level_scroll(Level *level) {
             if(level->camera.y < 0) {
                 level->camera.y = 0;
             }
-            if(level->camera.x > LEVEL_WIDTH - level->camera.w) {
-                level->camera.x = LEVEL_WIDTH - level->camera.w;
+            printf("TileR: %d\n",level->camera.y);
+            if(level->camera.x >  160 + ((LEVEL_TILE_WIDTH-50)*TILE_WIDTH)) {
+                level->camera.x =  160 + ((LEVEL_TILE_WIDTH-50)*TILE_WIDTH);
             }
-            if(level->camera.y > LEVEL_HEIGHT - level->camera.h) {
-                level->camera.y = LEVEL_HEIGHT - level->camera.h;
+            if(level->camera.y > TILE_HEIGHT * (LEVEL_TILE_HEIGHT - 10)) {
+                level->camera.y = TILE_HEIGHT * (LEVEL_TILE_HEIGHT - 10);
             }
+            
         }
     }
 }
@@ -213,7 +215,7 @@ void level_scroll(Level *level) {
  */
 void level_render(SDL_Renderer *renderer, Level *level) {
     sprite_render(renderer, level->background, 0, 0);
-
+    printf("Level: %d\n",level->camera.y);
     for (int i = 0; i < LEVEL_TILE_COUNT; i++) {
         if (level->tiles[i] != NULL) {
             tile_render(renderer, level->tiles[i], &level->camera);
