@@ -196,14 +196,14 @@ void level_scroll(Level *level) {
             if(level->camera.y < 0) {
                 level->camera.y = 0;
             }
-            printf("TileR: %d\n",level->camera.y);
+            
             if(level->camera.x >  160 + ((LEVEL_TILE_WIDTH-50)*TILE_WIDTH)) {
                 level->camera.x =  160 + ((LEVEL_TILE_WIDTH-50)*TILE_WIDTH);
             }
             if(level->camera.y > TILE_HEIGHT * (LEVEL_TILE_HEIGHT - 10)) {
                 level->camera.y = TILE_HEIGHT * (LEVEL_TILE_HEIGHT - 10);
             }
-            
+
         }
     }
 }
