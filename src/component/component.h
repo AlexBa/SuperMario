@@ -83,6 +83,10 @@ typedef struct cmp_enemy {
     bool vulnerable;
 } Enemy;
 
+typedef struct cmp_pyro {
+} Pyro;
+
+
 enum component {
     CMP_NONE = 0,
     CMP_RENDER = 1 << 0,
@@ -101,6 +105,7 @@ enum component {
     CMP_DEADLY = 1 << 13,
     CMP_SHOOTING = 1 << 14,
     CMP_BULLET = 1 << 15,
+    CMP_PYRO = 1 << 16,
 };
 
 #endif //SUPERMARIO_COMPONENT_H
