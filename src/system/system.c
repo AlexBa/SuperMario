@@ -19,18 +19,27 @@ void system_collision_update(Entity *entity, Level *level) {
 		// Apply the current position to the collision bounds
 		collision->bounds->x = (int) position->x;
 
-		collision_check_deadly_entities(level->entities, entity->collision.bounds);
+		if ((entity->component_mask & CMP_ENEMY) != 0) {
+			collision_check_enemy_kills_player(level->entities, entity);
+		}
+
+		if ((entity->component_mask & CMP_ITEM) != 0 &&
+			collision_check_item_touches_player(level->entities, entity)) {
+			level_remove_entity(level, entity);
+			return;
+		}
 
 		// Check the collision
 		if (collision_check_tiles(level->tiles, collision->bounds) ||
 			collision_check_entities(level->entities, collision->bounds)) {
-			position->x = position->oldX;
-			collision->bounds->x = (int) position->oldX;
-
 			if((entity->component_mask & CMP_BULLET) != 0) {
+				collision_check_bullet_kills_enemy(level->entities, entity);
 				level_remove_entity(level, entity);
 				return;
 			}
+
+			position->x = position->oldX;
+			collision->bounds->x = (int) position->oldX;
 
 			if((entity->component_mask & CMP_STRAIGHT_MOVEMENT) == CMP_STRAIGHT_MOVEMENT) {
 				if (strcmp(entity->straightMovement.direction, "left") == 0) {
@@ -53,9 +62,14 @@ void system_collision_update(Entity *entity, Level *level) {
 			collision_check_player_kills_enemy(level->entities, entity);
 		}
 
+		if ((entity->component_mask & CMP_ITEM) != 0 &&
+			collision_check_item_touches_player(level->entities, entity)) {
+			level_remove_entity(level, entity);
+			return;
+		}
+
 		// Check the collision
-		if (collision_check_tiles(level->tiles, collision->bounds) ||
-			collision_check_entities(level->entities, collision->bounds)) {
+		if (collision_check_tiles(level->tiles, collision->bounds)) {
 
 			if((entity->component_mask & CMP_JUMP) == CMP_JUMP && entity->jump.active == true) {
 				if (position->y > position->oldY) {
@@ -83,17 +97,32 @@ void system_health_update(Entity *entity, Level *level) {
 	if(entity != NULL &&
 	   (entity->component_mask & CMP_POSITION) != 0 &&
 	   (entity->component_mask & CMP_CHECK_POINT) != 0 &&
+	   (entity->component_mask & CMP_JUMP) != 0 &&
 	   (entity->component_mask & CMP_HEALTH) !=0 ) {
 
+		// The player has to jump on death
+		if (entity->player.alive == false && entity->jump.active == false) {
+			entity->jump.active = true;
+			entity->jump.currentForce = entity->jump.initialForce;
+			entity->component_mask ^= CMP_COLLISION;
+			return;
+		}
+
+		// Check if the player has fallen off the level
 		if((level->bounds.y + level->bounds.h) < entity->position.y) {
-			entity->health.counter--;
-			if (entity->health.counter == 0) {
+			// Quit the game if the player has no live anymore
+			if (entity->health.counter <= 1) {
 				game->running = false;
 				return;
 			}
 
+			// Reset the player with one live less
+			entity->health.counter--;
+			entity->component_mask |= CMP_COLLISION;
 			entity->position.x = entity->check_point.x;
 			entity->position.y = entity->check_point.y;
+			entity->player.alive = true;
+			entity->jump.active = false;
 		}
 	}
 }
@@ -112,6 +141,8 @@ void system_input_update(Entity *entity, const Uint8 *key, float delta) {
 			entity->position.y -= entity->jump.currentForce * delta * 1.2 ;
 		}
 	}
+
+
 
 	if(entity != NULL &&
 	   (entity->component_mask & CMP_POSITION) == CMP_POSITION &&
@@ -132,6 +163,18 @@ void system_input_update(Entity *entity, const Uint8 *key, float delta) {
 			if (key[SDL_SCANCODE_RIGHT]) {
 				entity->position.x += entity->velocity.x * delta;
 			}
+		}
+	}
+
+
+	if(entity != NULL &&
+	   (entity->component_mask & CMP_POSITION) != 0 &&
+	   (entity->component_mask & CMP_VELOCITY) != 0 &&
+	   (entity->component_mask & CMP_COLLISION) != 0 &&
+	   (entity->component_mask & CMP_PLAYER) != 0 &&
+	   (entity->component_mask & CMP_SHOOTING) != 0) {
+		if (key[SDL_SCANCODE_S]) {
+			entity->shooting.ready = true;
 		}
 	}
 }
@@ -184,18 +227,6 @@ void system_deadly_update(Entity *entity, Level *level) {
 			return;
 		}
 	}
-
-	if (entity != NULL &&
-		(entity->component_mask & CMP_COLLISION) != 0 &&
-		(entity->component_mask & CMP_JUMP) != 0 &&
-		(entity->component_mask & CMP_DEADLY) != 0) {
-			if (entity->deadly.isDead) {
-				entity->jump.active = true;
-				entity->jump.currentForce = entity->jump.initialForce;
-				entity->component_mask ^= CMP_COLLISION;
-			}
-		}
-
 }
 
 /**
@@ -212,14 +243,33 @@ void system_shooting_update(Entity *entity, Level *level, float delta) {
 		// Count the elapsed time for the next shoot
 		entity->shooting.elapsed += delta;
 		if (entity->shooting.elapsed >= entity->shooting.rate) {
-			entity->shooting.elapsed -= entity->shooting.rate;
+			if ((entity->component_mask & CMP_ENEMY) != 0) {
+				entity->shooting.ready = true;
+			}
 
+<<<<<<< HEAD
 			if(strcmp(entity->shooting.bulletType, "fireball") == 0 && strcmp(entity->shooting.direction, "left") == 0 ) {
 				Entity *fireball = fireball_create(entity->position.x - entity->shooting.bulletSize, entity->position.y, "left");
 				level_add_entity(level, fireball);
 			} else if (strcmp(entity->shooting.bulletType, "fireball") == 0 && strcmp(entity->shooting.direction, "right") == 0 ) {
 				Entity *fireball = fireball_create(entity->position.x + entity->shooting.bulletSize + TILE_WIDTH, entity->position.y, "right");
 				level_add_entity(level, fireball);
+=======
+			if (entity->shooting.ready == true) {
+				entity->shooting.ready = false;
+
+				if ((entity->component_mask & CMP_PLAYER) != 0) {
+					entity->shooting.elapsed = 0;
+				} else {
+					entity->shooting.elapsed -= entity->shooting.rate;
+				}
+
+				if (strcmp(entity->shooting.bulletType, "fireball") == 0) {
+					Entity *fireball = fireball_create(entity->position.x - entity->shooting.bulletSize,
+													   entity->position.y, "left");
+					level_add_entity(level, fireball);
+				}
+>>>>>>> feature/items
 			}
 		}
 	}
@@ -232,6 +282,11 @@ void system_shooting_update(Entity *entity, Level *level, float delta) {
  */
 void system_bullet_update(Entity *entity, Level *level) {
 	if (entity != NULL &&
+		(entity->component_mask & CMP_ENEMY) != 0 && entity->enemy.alive == false) {
+		level_remove_entity(level, entity);
+	}
+
+	if (entity != NULL &&
 		(entity->component_mask & CMP_COLLISION) != 0 &&
 		(entity->component_mask & CMP_BULLET) != 0) {
 
@@ -239,6 +294,43 @@ void system_bullet_update(Entity *entity, Level *level) {
 			collision_check_tiles(level->tiles, entity->collision.bounds) ||
 			!collision_check_level(level, entity->collision.bounds)) {
 			level_remove_entity(level, entity);
+		}
+	}
+}
+
+void system_item_update(Entity *entity, Level *level, float delta) {
+	if (entity != NULL &&
+		(entity->component_mask & CMP_HEALTH) != 0 &&
+		(entity->component_mask & CMP_PLAYER) != 0) {
+
+		// Check if the player collides with an item
+		if (entity->player.touchedItem != NULL) {
+			if (strcmp(entity->player.touchedItem, "mushroom") == 0) {
+				entity->health.counter++;
+				printf("Touched mushroom. Life: %d", entity->health.counter);
+			} else if (strcmp(entity->player.touchedItem, "fireflower") == 0) {
+				entity->component_mask |= CMP_SHOOTING;
+				entity->shooting.ready = false;
+				entity->shooting.bulletType = "fireball";
+				entity->shooting.bulletSize = 5;
+				entity->shooting.direction = "right";
+				entity->shooting.rate = 0.5f;
+				entity->shooting.elapsed = 0;
+				entity->shooting.velocityX = -100;
+				entity->shooting.velocityY = 0;
+				printf("Touched fire flower.");
+			}
+
+			entity->player.touchedItem = NULL;
+		}
+	}
+
+	if (entity != NULL &&
+		(entity->component_mask & CMP_ITEM) != 0) {
+
+		if (collision_check_item_touches_player(level->entities, entity)) {
+			level_remove_entity(level, entity);
+			return;
 		}
 	}
 }

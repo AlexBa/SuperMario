@@ -23,5 +23,6 @@ void system_collision_update(Entity *entity, Level *level);
 void system_deadly_update(Entity *entity, Level *level);
 void system_shooting_update(Entity *entity, Level *level, float delta);
 void system_bullet_update(Entity *entity, Level *level);
+void system_item_update(Entity *entity, Level *level, float delta);
 
 #endif
