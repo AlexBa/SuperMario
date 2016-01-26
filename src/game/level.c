@@ -1,4 +1,5 @@
 #include "level.h"
+#include "../entity/coin.h"
 
 /**
  * Create a new level
@@ -24,7 +25,7 @@ Level* level_create(SDL_Renderer *renderer, const char *name) {
 
     char field [LEVEL_HEIGHT][LEVEL_WIDTH] = {"_________________________",
                                               "|                       |",
-                                              "|                       |",
+                                              "|             o    o    |",
                                               "|         c             |",
                                               "|        cc c           |",
                                               "|      c cc c       c   |",
@@ -44,7 +45,11 @@ Level* level_create(SDL_Renderer *renderer, const char *name) {
             } else if (field [i][j] == 'c') {
                 Tile *tile = tile_create(renderer, "brick.bmp", TILE_BLOCK, (j * TILE_WIDTH), (i * TILE_HEIGHT));
                 level_add_tile(level, tile);
+            } else if (field [i][j] == 'o') {
+                Entity *coin = coin_create(500.0f, 60.0f);
+                level_add_entity(level, coin);
             }
+
         }
     }
 
