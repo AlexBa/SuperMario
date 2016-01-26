@@ -10,6 +10,7 @@
 #include "../entity/entity.h"
 #include "../entity/player.h"
 #include "../entity/pyro.h"
+#include "../entity/fireflower.h"
 #include "../entity/enemy.h"
 #include "../entity/pyro.h"
 #include "../entity/mushroom.h"

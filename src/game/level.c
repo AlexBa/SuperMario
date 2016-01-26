@@ -80,6 +80,9 @@ Level* level_create(SDL_Renderer *renderer, const char *name) {
             } else if (field [i][j] == 'O') { //Coin
                 Entity *coin = coin_create((j * TILE_WIDTH), (i * TILE_HEIGHT));
                 level_add_entity(level, coin);
+            }  else if (field [i][j] == 'F') { //Mushroom
+                Entity *fireflower = fireflower_create((j * TILE_WIDTH), (i * TILE_HEIGHT));
+                level_add_entity(level, fireflower);
             }
         }
     }
