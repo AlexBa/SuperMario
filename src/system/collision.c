@@ -174,6 +174,22 @@ bool collision_check_item_touches_player(Entity *entities[], Entity *item) {
     return false;
 }
 
+bool collision_check_bullet_kills_player(Entity *entities[], Entity *bullet) {
+    for(int i = 0; i < LEVEL_ENTITY_COUNT; i++) {
+        Entity *player = entities[i];
+
+        if (player != NULL && player != bullet &&
+            (player->component_mask & CMP_PLAYER) != 0 &&
+            (player->component_mask & CMP_COLLISION) != 0) {
+            if (collision_check(bullet->collision.bounds, player->collision.bounds)) {
+                player->player.alive = false;
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
 
 bool collision_check_bullet_kills_enemy(Entity *entities[], Entity *bullet) {
     for(int i = 0; i < LEVEL_ENTITY_COUNT; i++) {

@@ -30,10 +30,10 @@ Level* level_create(SDL_Renderer *renderer, const char *name) {
     char field [LEVEL_TILE_HEIGHT][LEVEL_TILE_WIDTH] =
         {"__________________________________________________",
          "|                       |                        |",
-         "|                       |     ccc   c      cOc   |",
-         "|         c             |    cccc   c     ccOcc  |",
-         "|P       c  c        O  |   ccccc   c    cc O cc |",
-         "|cccc  c c  c     O  c  |  ccccccE  c   cc  E  cc|",
+         "|                       |     ccc   c      c c   |",
+         "|         c             |    cccc   c    Occ cc  |",
+         "|P       c  c        O  |   ccccc  cc    cc   cc |",
+         "|cccc  c c  c        c  |  ccccccE  c   cc  E  cc|",
          "|     c Ecc  c    c     | _______________________|",
          "|       cc c  c   c     |                        |",
          "|      c      M c       |c c  c  c   c  cc  c  c |",
@@ -41,12 +41,12 @@ Level* level_create(SDL_Renderer *renderer, const char *name) {
          "|        c             c|  c  c  c  cc   c c c   |",
          "|  ccccc  cccc  cc   c c|c                       |",
          "|  cR         c   cc c c| c        c         c   |",
-         "|   cO   c c     c   E  |  c       LcEEE    c    |",
+         "|   c    c c     c   E  |  c       LcEEE    c    |",
          "|_ _____________________|______________________ _|",
          "|          c            |         L    c     c  c|",
-         "|c      Lc c   c        |      cccc  c c     Lc  |",
+         "|c      Lc c   c O      |      cccc Oc c     Lc  |",
          "| c    Ecc    c  c c   c|    c      c  c  c  c  c|",
-         "|  ccccc  c    R        O   c cc E c c   c     c |",
+         "|  ccccc  c    R            c cc E c c   c     c |",
          "|________________________________________________|",};
 
     for (int i = 0; i < LEVEL_TILE_HEIGHT; i++) {

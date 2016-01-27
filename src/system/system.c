@@ -34,6 +34,7 @@ void system_collision_update(Entity *entity, Level *level) {
 			collision_check_entities(level->entities, collision->bounds)) {
 			if((entity->component_mask & CMP_BULLET) != 0) {
 				collision_check_bullet_kills_enemy(level->entities, entity);
+				collision_check_bullet_kills_player(level->entities, entity);
 				level_remove_entity(level, entity);
 				return;
 			}
@@ -70,6 +71,12 @@ void system_collision_update(Entity *entity, Level *level) {
 
 		// Check the collision
 		if (collision_check_tiles(level->tiles, collision->bounds)) {
+			if((entity->component_mask & CMP_BULLET) != 0) {
+				collision_check_bullet_kills_enemy(level->entities, entity);
+				collision_check_bullet_kills_player(level->entities, entity);
+				level_remove_entity(level, entity);
+				return;
+			}
 
 			if((entity->component_mask & CMP_JUMP) == CMP_JUMP && entity->jump.active == true) {
 				if (position->y > position->oldY) {
@@ -243,7 +250,7 @@ void system_shooting_update(Entity *entity, Level *level, float delta) {
 		// Count the elapsed time for the next shoot
 		entity->shooting.elapsed += delta;
 		if (entity->shooting.elapsed >= entity->shooting.rate) {
-			if ((entity->component_mask & CMP_PYRO) != 0) {
+			if ((entity->component_mask & CMP_ENEMY) != 0) {
 				entity->shooting.ready = true;
 			}
 
@@ -313,6 +320,8 @@ void system_item_update(Entity *entity, Level *level, float delta) {
 				entity->shooting.velocityX = -100;
 				entity->shooting.velocityY = 0;
 				printf("Touched fire flower.");
+			} else if (strcmp(entity->player.touchedItem, "coin") == 0) {
+				printf("Touched coin. Life");
 			}
 
 			entity->player.touchedItem = NULL;

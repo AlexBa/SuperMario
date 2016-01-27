@@ -18,5 +18,6 @@ bool collision_check_player_kills_enemy(Entity *entities[], Entity *player);
 bool collision_check_enemy_kills_player(Entity *entities[], Entity *enemy);
 bool collision_check_item_touches_player(Entity *entities[], Entity *item);
 bool collision_check_bullet_kills_enemy(Entity *entities[], Entity *bullet);
+bool collision_check_bullet_kills_player(Entity *entities[], Entity *bullet);
 
 #endif //SUPERMARIO_COLLISION_H
